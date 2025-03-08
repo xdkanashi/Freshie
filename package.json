@@ -1,0 +1,39 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "@popperjs/core": "^2.11.6",
+        "autoprefixer": "^10.4.20",
+        "axios": "^1.7.4",
+        "bootstrap": "^5.2.3",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^1.2.0",
+        "postcss": "^8.5.3",
+        "sass": "^1.56.1",
+        "tailwindcss": "^3.4.14",
+        "vite": "^5.4.8",
+        "vite-plugin-full-reload": "^1.2.0"
+    },
+    "name": "freshie-project",
+    "version": "1.0.0",
+    "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\" alt=\"Laravel Logo\"></a></p>",
+    "main": "vite.config.js",
+    "directories": {
+        "test": "tests"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/laravel/laravel.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/laravel/laravel/issues"
+    },
+    "homepage": "https://github.com/laravel/laravel#readme"
+}

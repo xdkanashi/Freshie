@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Сброс базовых стилей */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+}
+
+/* Анимация бегущей строки (справа налево) */
+.animate-marquee {
+    animation: marquee 15s linear infinite;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Анимация для мобильного меню */
+#mobile-nav {
+    transition: transform 0.3s ease-in-out;
+}
+/* Анимация для плавного появления */
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Glow effect для продуктов */
+.glow-effect {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8))
+        drop-shadow(0 0 10px rgba(255, 255, 255, 0.6))
+        drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
+}
+
+/* Анимация для выпадающего списка "PRODUCTS" */
+#products-dropdown {
+    transition: all 0.3s ease-in-out;
+}
+
+#products-dropdown.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    height: 0;
+    overflow: hidden;
+}
+
+#products-dropdown:not(.hidden) {
+    opacity: 1;
+    transform: translateY(0);
+    height: auto;
+}
