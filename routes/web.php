@@ -1,28 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\LeaderboardController;
+use App\Http\Controllers\LoginController;
 
-
-
-
-// Переопределяем маршруты для логина и регистрации, чтобы они вели на /auth
-Route::get('/login', function () {
-    return redirect()->route('auth');
-})->name('login');
-
-Route::get('/register', function () {
-    return redirect()->route('auth');
-})->name('register');
-
-// Маршрут для страницы /auth
-Route::get('/auth', function () {
-    return view('auth');
-})->name('auth');
-
-Auth::routes();
+Auth::routes([
+    'register' => true, // Ensure registration is enabled
+    'login' => true,   // Ensure login is enabled
+    'reset' => false,  // Disable password reset if not needed
+]);
 
 Route::get('/leaderboard', [LeaderboardController::class, 'index']);
 Route::post('/leaderboard/save', [LeaderboardController::class, 'save']);
@@ -35,5 +22,3 @@ Route::get('/refund-policy', [PageController::class, 'refund'])->name('refund-po
 Route::get('/terms-of-service', [PageController::class, 'terms'])->name('terms-of-service');
 Route::get('/privacy-policy', [PageController::class, 'privacy'])->name('privacy-policy');
 Route::get('/pre-order-status', [PageController::class, 'preorder'])->name('pre-order-status');
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -1,0 +1,577 @@
+/* Стили для фонового видео */
+.background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    filter: brightness(0.5);
+}
+
+.text-silver-400 {
+    color: #c0c0c0;
+    animation: silverShimmer 3s infinite;
+}
+
+@keyframes silverShimmer {
+    0% {
+        color: #c0c0c0;
+    }
+
+    50% {
+        color: #d3d3d3;
+    }
+
+    100% {
+        color: #c0c0c0;
+    }
+}
+
+.glow {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+        0 0 40px rgba(255, 255, 255, 0.3);
+    animation: glowPulse 2s infinite alternate;
+}
+
+.glow-focus:focus,
+.glow-hover:hover,
+.glow-always {
+    animation: glowPulse 1.5s infinite alternate;
+}
+
+@keyframes glowPulse {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
+            0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    100% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.9),
+            0 0 30px rgba(255, 255, 255, 0.7);
+    }
+}
+
+.center {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+    position: relative;
+    z-index: 10;
+}
+
+.center.view {
+    perspective: 1500px;
+}
+
+.rotate {
+    transform-style: preserve-3d;
+    transition: transform 0.3s;
+    margin: 0 auto;
+    user-select: none;
+    z-index: 10;
+    pointer-events: auto;
+}
+
+.rotate.rotated {
+    transform: rotateZ(40deg) rotateX(40deg) rotateY(-28deg);
+}
+
+.row {
+    padding: 1rem;
+    background: #000;
+    transition: all 0.3s;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    position: relative;
+    z-index: 10;
+}
+
+.rotate.rotated .row {
+    box-shadow: 20px 30px 20px rgba(255, 255, 255, 0.4);
+}
+
+.button {
+    transform-style: preserve-3d;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rotated .button {
+    transform: translateZ(15px);
+}
+
+.rotated .button::before {
+    content: "";
+    position: absolute;
+    background: #000;
+    width: calc(100% + 4px);
+    height: 15px;
+    bottom: -2px;
+    left: -2px;
+    transform-origin: center bottom;
+    transform: rotateX(90deg);
+    transition: all 0.3s;
+    z-index: 5;
+}
+
+.rotated .button::after {
+    content: "";
+    position: absolute;
+    background: #000;
+    width: 15px;
+    height: calc(100% + 4px);
+    top: -2px;
+    right: -2px;
+    transform-origin: right center;
+    transform: rotateY(-90deg);
+    transition: all 0.3s;
+    z-index: 5;
+}
+
+.rotated .button:hover {
+    transform: translateZ(10px);
+}
+
+.rotated .button:hover::before {
+    height: 10px;
+}
+
+.rotated .button:hover::after {
+    width: 10px;
+}
+
+.button,
+.button::before,
+.button::after {
+    background: #000;
+}
+
+.button:hover,
+.button:hover::before,
+.button:hover::after {
+    background: #1a202c;
+}
+
+.button.success,
+.button.success::before,
+.button.success::after {
+    background: #000;
+}
+
+.button.success:hover,
+.button.success:hover::before,
+.button.success:hover::after {
+    background: #1a202c;
+}
+
+.text {
+    transform: translateZ(0px);
+    transition: all 0.3s;
+    z-index: 10;
+}
+
+.rotated .text {
+    transform: translateZ(15px);
+    text-shadow: 10px 16px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Ensure logo is centered */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.logo-container a {
+    display: inline-block;
+}
+
+/* Password visibility styles */
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.eyeball {
+    --size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: absolute;
+    top: 45%;
+    right: 0.75rem;
+    border: none;
+    background-color: transparent;
+    transform: translateY(-50%);
+    z-index: 20;
+    padding: 0;
+}
+
+.eye {
+    width: var(--size);
+    height: var(--size);
+    border: 2px solid white;
+    border-radius: calc(var(--size) / 1.5) 0;
+    transform: rotate(45deg);
+    position: relative;
+}
+
+.eye:before,
+.eye:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    border-radius: 100%;
+}
+
+.eye:before {
+    width: 35%;
+    height: 35%;
+    background-color: white;
+}
+
+.eye:after {
+    width: 65%;
+    height: 65%;
+    border: 2px solid white;
+}
+
+.beam {
+    position: absolute;
+    top: 45%;
+    right: 1.75rem;
+    clip-path: polygon(100% 50%, 100% 50%, 0 0, 0 100%);
+    width: 100vw;
+    height: 25vw;
+    z-index: 1;
+    mix-blend-mode: multiply;
+    transition: transform 200ms ease-out;
+    transform-origin: 100% 50%;
+    transform: translateY(-50%) rotate(var(--beamDegrees, 0));
+    pointer-events: none;
+}
+
+#beam_confirm {
+    transform: translateY(-50%) rotate(var(--beamDegreesConfirm, 0));
+}
+
+.show-password .beam {
+    background: red;
+}
+
+.show-password .input {
+    color: white;
+}
+
+/* Password requirements styles */
+.password-requirements {
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    max-width: 250px;
+}
+
+.password-requirements h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    text-align: center;
+}
+
+.password-requirements .check {
+    display: inline-block;
+    width: 1.2rem;
+    text-align: center;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Анимация появления галочки */
+.password-requirements .check i.fas.fa-check {
+    animation: checkAppear 0.5s ease forwards;
+}
+
+@keyframes checkAppear {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Эффект переливания текста при выполнении условия */
+.password-requirement-item.fulfilled {
+    animation: gradientText 2s infinite linear;
+}
+
+@keyframes gradientText {
+    0% {
+        color: #ffffff;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+
+    50% {
+        color: #00ff88;
+        text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+    }
+
+    100% {
+        color: #ffffff;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* Эффект переливания текста для невыполненных условий */
+.password-requirement-item.unfulfilled {
+    animation: gradientRedText 2s infinite linear;
+}
+
+@keyframes gradientRedText {
+    0% {
+        color: #ffffff;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+
+    50% {
+        color: #ff4444;
+        text-shadow: 0 0 10px rgba(255, 68, 68, 0.8);
+    }
+
+    100% {
+        color: #ffffff;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+}
+
+/* Анимация для крестика (плавное исчезновение/появление) */
+.password-requirements .check i.fas.fa-times {
+    animation: crossFade 0.3s ease forwards;
+}
+
+@keyframes crossFade {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 1024px) {
+    .center {
+        padding: 0;
+    }
+
+    .rotate {
+        max-width: 90%;
+    }
+
+    .row {
+        padding: 0.8rem;
+        margin: 0.8rem 0;
+    }
+
+    .text-2xl,
+    .text-3xl,
+    .text-4xl {
+        font-size: 1.5rem !important;
+    }
+
+    .input {
+        width: 100%;
+        padding: 0.6rem 2rem 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .input-wrapper {
+        width: 100%;
+    }
+
+    .button {
+        width: 80px;
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        min-height: 48px;
+    }
+
+    .eyeball {
+        right: 0.5rem;
+        --size: 1rem;
+        top: 45%;
+    }
+
+    .beam {
+        right: 1.25rem;
+        height: 20vw;
+        top: 45%;
+    }
+
+    .password-requirements {
+        margin-top: 1rem;
+        width: 100%;
+        max-width: none;
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .rotate {
+        max-width: 85%;
+    }
+
+    .text-2xl,
+    .text-3xl,
+    .text-4xl {
+        font-size: 1.2rem !important;
+    }
+
+    .input {
+        width: 100%;
+        padding: 0.5rem 2rem 0.5rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .input-wrapper {
+        width: 100%;
+    }
+
+    .button {
+        width: 90px;
+        font-size: 0.9rem;
+        padding: 0.6rem 1.2rem;
+        min-height: 48px;
+    }
+
+    .eyeball {
+        right: 0.5rem;
+        --size: 1rem;
+        top: 45%;
+    }
+
+    .beam {
+        right: 1.25rem;
+        height: 20vw;
+        top: 45%;
+    }
+
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .rotate {
+        max-width: 80%;
+    }
+
+    .text-2xl,
+    .text-3xl,
+    .text-4xl {
+        font-size: 1rem !important;
+    }
+
+    .input {
+        width: 100%;
+        padding: 0.4rem 2rem 0.4rem 0.6rem;
+        font-size: 0.8rem;
+    }
+
+    .input-wrapper {
+        width: 100%;
+    }
+
+    .button {
+        width: 100px;
+        font-size: 0.9rem;
+        padding: 0.8rem 1.5rem;
+        min-height: 50px;
+    }
+
+    .eyeball {
+        right: 0.4rem;
+        --size: 0.9rem;
+        top: 45%;
+    }
+
+    .beam {
+        right: 1rem;
+        height: 15vw;
+        top: 45%;
+    }
+
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+}
+
+/* Адаптивность для больших экранов */
+@media (min-width: 768px) {
+    .row {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .password-requirements {
+        margin-left: 1rem;
+        width: 250px;
+    }
+
+    .input {
+        max-width: 350px;
+    }
+
+    .input-wrapper {
+        max-width: 350px;
+    }
+
+    .logo-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+}

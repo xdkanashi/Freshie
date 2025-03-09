@@ -39,96 +39,106 @@
 <body class="bg-black text-white font-sans">
     <!-- Frozen Line -->
     <div
-        class="frozen-line bg-black text-white text-center py-2 fixed top-0 w-full z-[101] overflow-hidden whitespace-nowrap animate-fade-in">
+        class="frozen-line bg-black text-white text-center py-2 fixed top-0 w-full overflow-hidden whitespace-nowrap animate-fade-in h-8 z-[1000]">
         <span class="inline-block text-xs sm:text-sm uppercase font-bold tracking-widest animate-marquee">
             FREE SHIPPING WORLDWIDE | WEBSITE BY RAMMENZ | USE HELLSTAR12 TO GET 15% OFF | FRESHIE PREMIUM THEME
         </span>
     </div>
 
-<!-- Header -->
-<header class="w-full bg-black/90 py-3 z-[100] min-h-[70px] pt-[40px] sm:pt-[48px]">
-    <div class="max-w-6xl mx-auto px-4 sm:px-5 flex items-center justify-between animate-fade-in">
-        <!-- Left: Burger Menu for Mobile -->
-        <div class="md:hidden flex items-center space-x-4">
-            <button id="burger-toggle" class="text-white text-2xl hover:text-gray-400">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
+    <!-- Header -->
+    <header class="w-full bg-black/90 py-3 min-h-[70px] pt-4 z-[900] overflow-visible">
+        <div class="max-w-6xl mx-auto px-4 sm:px-5 flex items-center justify-between animate-fade-in">
+            <!-- Left: Burger Menu for Mobile -->
+            <div class="md:hidden flex items-center space-x-4">
+                <button id="burger-toggle" class="text-white text-2xl hover:text-gray-400">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
 
-        <!-- Left: Navigation (Desktop) -->
-        <div class="hidden md:block flex-shrink-0">
-            <nav class="flex space-x-4">
+            <!-- Left: Navigation (Desktop) -->
+            <div class="hidden md:block flex-shrink-0">
+                <nav class="flex space-x-4">
+                    <a href="{{ url('/collections') }}"
+                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('collections') ? 'border-b-2 border-white' : '' }}">Store</a>
+                    <a href="{{ url('/contact') }}"
+                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('contact') ? 'border-b-2 border-white' : '' }}">Contact</a>
+                    <a href="{{ url('/lookbook') }}"
+                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('lookbook') ? 'border-b-2 border-white' : '' }}">Lookbook</a>
+                    <a href="{{ url('/return-policy') }}"
+                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('return-policy') ? 'border-b-2 border-white' : '' }}">Return
+                        Policy</a>
+                    <a href="/pre-order-status"
+                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('pre-order-status') ? 'border-b-2 border-white' : '' }}">Pre-Order
+                        Status</a>
+                </nav>
+            </div>
+
+            <!-- Center: Logo Animation with Homepage Link -->
+            <div class="flex-shrink-0 mx-auto md:mx-0">
+                <a href="{{ url('/') }}">
+                    <img src="{{ asset('img/logo-removebg.png') }}" alt="Freshie Logo"
+                        class="h-16 sm:h-20 md:h-24 object-contain animate-pulse-slow cursor-pointer">
+                </a>
+            </div>
+
+            <!-- Right: Icons (Mobile & Desktop) -->
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <!-- Cart Icon -->
+                <div class="relative">
+                    <button id="cart-toggle" class="text-white text-xl sm:text-2xl hover:text-gray-400 hover:scale-105">
+                        <i class="fas fa-shopping-cart"></i>
+                    </button>
+                </div>
+
+                <!-- Profile Icon -->
+                <div class="relative">
+                    <button id="profile-toggle"
+                        class="text-white text-xl sm:text-2xl hover:text-gray-400 hover:scale-105">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-nav"
+        class="fixed top-0 left-0 w-full h-[50vh] bg-black/90 z-[950] hidden -translate-y-full transition-transform duration-500">
+        <div class="flex flex-col h-full">
+            <!-- Close Button (Moved to top) -->
+            <div class="flex justify-end p-7">
+                <button id="close-menu" class="text-white text-2xl hover:text-gray-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <!-- Navigation Links -->
+            <nav class="flex flex-col items-center justify-start flex-grow pt-10 space-y-6">
                 <a href="{{ url('/collections') }}"
-                    class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('collections') ? 'border-b-2 border-white' : '' }}">Store</a>
+                    class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('collections') ? 'border-b-2 border-white' : '' }}">Store</a>
                 <a href="{{ url('/contact') }}"
-                    class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('contact') ? 'border-b-2 border-white' : '' }}">Contact</a>
+                    class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('contact') ? 'border-b-2 border-white' : '' }}">Contact</a>
                 <a href="{{ url('/lookbook') }}"
-                    class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('lookbook') ? 'border-b-2 border-white' : '' }}">Lookbook</a>
+                    class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('lookbook') ? 'border-b-2 border-white' : '' }}">Lookbook</a>
                 <a href="{{ url('/return-policy') }}"
-                    class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('return-policy') ? 'border-b-2 border-white' : '' }}">Return
+                    class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('return-policy') ? 'border-b-2 border-white' : '' }}">Return
                     Policy</a>
                 <a href="/pre-order-status"
-                    class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('pre-order-status') ? 'border-b-2 border-white' : '' }}">Pre-Order
+                    class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('pre-order-status') ? 'border-b-2 border-white' : '' }}">Pre-Order
                     Status</a>
             </nav>
         </div>
-
-        <!-- Center: Logo Animation with Homepage Link -->
-        <div class="flex-shrink-0 mx-auto md:mx-0">
-            <a href="{{ url('/') }}">
-                <img src="{{ asset('img/logo-removebg.png') }}" alt="Freshie Logo"
-                    class="h-16 sm:h-20 md:h-24 object-contain animate-pulse-slow cursor-pointer">
-            </a>
-        </div>
-
-        <!-- Right: Icons (Mobile & Desktop) -->
-        <div class="flex items-center space-x-3 sm:space-x-4">
-            <a href="#" class="text-white text-xl sm:text-2xl hover:text-gray-400 hover:scale-105">
-                <i class="fas fa-user"></i> <!-- Заменили fa-search на fa-user -->
-            </a>
-            <a href="#" class="text-white text-xl sm:text-2xl hover:text-gray-400 hover:scale-105">
-                <i class="fas fa-shopping-cart"></i>
-            </a>
-        </div>
     </div>
-
-    <!-- Mobile Navigation (Slide-in Menu) -->
-    <div id="mobile-nav"
-        class="fixed top-0 left-0 w-3/4 h-full bg-black/90 flex flex-col space-y-6 p-4 z-[102] opacity-0 transform -translate-y-full transition-all duration-500 ease-in-out hidden md:hidden">
-        <div class="flex items-center justify-between mb-6">
-            <button id="close-menu" class="text-white text-2xl hover:text-gray-400">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <a href="{{ url('/collections') }}"
-            class="text-white no-underline text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 border-b border-gray-300 pb-2 opacity-0 {{ request()->is('collections') ? 'border-b-2 border-white' : '' }}"
-            style="transition: opacity 0.5s ease-out 0.1s;">Store</a>
-        <a href="{{ url('/contact') }}"
-            class="text-white no-underline text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 border-b border-gray-300 pb-2 opacity-0 {{ request()->is('contact') ? 'border-b-2 border-white' : '' }}"
-            style="transition: opacity 0.5s ease-out 0.3s;">Contact</a>
-        <a href="{{ url('/lookbook') }}"
-            class="text-white no-underline text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 border-b border-gray-300 pb-2 opacity-0 {{ request()->is('lookbook') ? 'border-b-2 border-white' : '' }}"
-            style="transition: opacity 0.5s ease-out 0.5s;">Lookbook</a>
-        <a href="{{ url('/return-policy') }}"
-            class="text-white no-underline text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 border-b border-gray-300 pb-2 opacity-0 {{ request()->is('return-policy') ? 'border-b-2 border-white' : '' }}"
-            style="transition: opacity 0.5s ease-out 0.7s;">Return Policy</a>
-        <a href="{{ url('/pre-order-status') }}"
-            class="text-white no-underline text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 border-b border-gray-300 pb-2 opacity-0 {{ request()->is('pre-order-status') ? 'border-b-2 border-white' : '' }}"
-            style="transition: opacity 0.5s ease-out 0.9s;">Pre-Order Status</a>
-    </div>
-</header>
 
     <!-- Main Content -->
-    <main class="pt-[40px] sm:pt-[48px]">
+    <main class="pt-[40px] sm:pt-[48px] z-[100]">
         @yield('content')
     </main>
 
     <!-- Footer -->
-    <footer class="bg-black text-white py-8 sm:py-10 mt-10 border-t border-gray-700 font-montserrat">
+    <footer class="bg-black text-white py-8 sm:py-10 mt-10 border-t border-gray-700 font-montserrat z-[50]">
         <div class="max-w-6xl mx-auto px-4 sm:px-5">
             <!-- Top Section -->
             <div class="flex flex-col md:flex-row justify-between items-start mb-8 sm:mb-10">
-                <!-- Subscribe Section -->
                 <div class="w-full md:w-1/3 mb-5 md:mb-0">
                     <h4 class="text-base sm:text-lg uppercase font-bold tracking-wider mb-4">Subscribe to our emails
                     </h4>
@@ -138,8 +148,6 @@
                         <button class="text-white text-base sm:text-lg"><i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
-
-                <!-- Social Media Icons -->
                 <div class="flex space-x-3 sm:space-x-4">
                     <a href="https://www.instagram.com/freshie.exe/"
                         class="text-white text-base sm:text-lg hover:text-gray-400"><i class="fab fa-instagram"></i></a>
@@ -153,10 +161,7 @@
                             class="fab fa-discord"></i></a>
                 </div>
             </div>
-
-            <!-- Bottom Section -->
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <!-- Region Selector -->
                 <div class="w-full md:w-1/3 mb-5 md:mb-0 relative">
                     <label for="region"
                         class="text-xs sm:text-sm uppercase font-bold tracking-wider mb-2 block">Country/Region</label>
@@ -178,8 +183,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Footer Links -->
                 <div class="flex flex-wrap justify-center space-x-3 sm:space-x-4 mb-5 md:mb-0">
                     <a href="{{ url('/privacy-policy') }}"
                         class="text-white no-underline text-xs sm:text-sm uppercase font-bold tracking-wider hover:text-gray-400 {{ request()->is('privacy-policy') ? 'border-b-2 border-white' : '' }}">Privacy
@@ -191,8 +194,6 @@
                         class="text-white no-underline text-xs sm:text-sm uppercase font-bold tracking-wider hover:text-gray-400 {{ request()->is('terms-of-service') ? 'border-b-2 border-white' : '' }}">Terms
                         of Service</a>
                 </div>
-
-                <!-- Payment Methods -->
                 <div class="flex space-x-2">
                     <img src="{{ asset('img/google-pay.png') }}" alt="Google Pay" class="h-5 sm:h-6">
                     <img src="{{ asset('img/apple-pay.png') }}" alt="Apple Pay" class="h-5 sm:h-6">
@@ -201,15 +202,95 @@
                     <img src="{{ asset('img/visa.png') }}" alt="Visa" class="h-5 sm:h-6">
                 </div>
             </div>
-
-            <!-- Copyright -->
             <div class="text-center mt-5 text-xs sm:text-sm font-bold text-gray-400">
                 © 2025, FRESHIE. All Rights Reserved.
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript для управления бургер-меню и выпадающим списком -->
+    <!-- Profile Dropdown -->
+    <div id="profile-dropdown"
+        class="profile-dropdown w-80 bg-black rounded-xl shadow-[20px_20px_40px_rgba(255,255,255,0.3),-20px_-20px_40px_rgba(0,0,0,0.5)] opacity-0 invisible transition-all duration-300 z-[10000] fixed top-[80px] right-[20px]">
+        <div class="p-5">
+            @if (Auth::check())
+                <!-- Профиль для авторизованного пользователя -->
+                <div>
+                    <h3 class="text-2xl font-extrabold uppercase tracking-widest text-white mb-5">Profile</h3>
+                    <p class="text-sm text-gray-300 mb-3">Welcome, {{ Auth::user()->username ?? 'Guest' }}</p>
+                    <button
+                        class="w-full bg-black text-white text-sm font-bold uppercase tracking-wider py-2 rounded-lg border-2 border-white hover:bg-gray-800 transition-all duration-300"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Logout
+                    </button>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </div>
+            @else
+                <!-- Форма входа для неавторизованного пользователя -->
+                <h3 class="text-2xl font-extrabold uppercase tracking-widest text-white mb-5">Sign In</h3>
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+                    <fieldset class="w-full">
+                        <div class="mb-4">
+                            <label for="login" class="block mb-2 text-white font-semibold text-sm sm:text-base">Username or
+                                E-Mail</label>
+                            <input type="text" name="login" id="login"
+                                class="input w-full mb-2 sm:mb-3 p-2 sm:p-3 text-sm text-white bg-gray-700 rounded-lg shadow-inner focus:shadow-[0_0_15px_rgba(255,255,255,0.9)] focus:outline-none transition-all duration-300 glow-focus"
+                                placeholder="username or email@example.com" value="{{ old('login') }}" required
+                                autocomplete="username" maxlength="50">
+                            @error('login')
+                                <span class="text-red-500 text-sm block mb-2">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-4 relative">
+                            <label for="password"
+                                class="block mb-2 text-white font-semibold text-sm sm:text-base">Password</label>
+                            <input type="password" name="password" id="password"
+                                class="input w-full mb-2 sm:mb-3 p-2 sm:p-3 text-sm text-white bg-gray-700 rounded-lg shadow-inner focus:shadow-[0_0_15px_rgba(255,255,255,0.9)] focus:outline-none transition-all duration-300 glow-focus"
+                                required autocomplete="current-password" maxlength="50">
+                            <span
+                                class="absolute right-3 top-[60%] transform -translate-y-1/2 cursor-pointer text-gray-400 hover:text-white toggle-password">
+                                <i class="fas fa-eye" id="toggle-password-icon"></i>
+                            </span>
+                            @error('password')
+                                <span class="text-red-500 text-sm block mb-2">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-black text-white text-sm font-bold uppercase tracking-wider py-2 rounded-lg border-2 border-white hover:bg-gray-800 transition-all duration-300">
+                            Sign In
+                        </button>
+                    </fieldset>
+                </form>
+                <div class="mt-4 text-center">
+                    <a href="#" class="text-xs text-gray-400 hover:text-white transition-colors duration-300">Forgot
+                        Password?</a>
+                </div>
+                <div class="mt-2 text-center">
+                    <p class="text-xs text-gray-400">New Here? <a href="{{ route('register') }}"
+                            class="text-white hover:text-gray-300 transition-colors duration-300">Register</a></p>
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Cart Dropdown -->
+    <div id="cart-dropdown"
+        class="w-80 bg-black rounded-xl shadow-[20px_20px_40px_rgba(255,255,255,0.3),-20px_-20px_40px_rgba(0,0,0,0.5)] opacity-0 invisible transition-all duration-300 z-[10000] fixed top-[80px] right-[60px]">
+        <div class="p-5">
+            <h3 class="text-2xl font-extrabold uppercase tracking-widest text-white mb-5">Cart</h3>
+            <p class="text-sm text-gray-300 mb-3">Your cart is empty</p>
+        </div>
+    </div>
+
+    <!-- Кнопка "Scroll to Top" слева внизу -->
+    <div class="fixed bottom-4 left-4 w-12 h-12 bg-[#1a1a1a] rounded-full flex items-center justify-center opacity-0 invisible transition-opacity duration-300 z-[1000] md:hidden"
+        id="scroll-to-top">
+        <i class="fas fa-chevron-up text-white text-2xl"></i>
+    </div>
+
+    <!-- JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Бургер-меню
@@ -217,39 +298,46 @@
             const mobileNav = document.getElementById('mobile-nav');
             const closeMenu = document.getElementById('close-menu');
             const body = document.body;
-            const navItems = mobileNav.querySelectorAll('a');
+            const navItems = mobileNav ? mobileNav.querySelectorAll('a') : [];
 
-            burgerToggle.addEventListener('click', function () {
-                mobileNav.classList.remove('hidden');
-                mobileNav.classList.remove('-translate-y-full');
-                mobileNav.classList.add('translate-y-0');
-                mobileNav.classList.add('opacity-100');
-                body.classList.add('overflow-hidden');
+            if (burgerToggle && mobileNav) {
+                burgerToggle.addEventListener('click', function () {
+                    mobileNav.classList.remove('hidden');
+                    mobileNav.classList.remove('-translate-y-full');
+                    mobileNav.classList.add('translate-y-0');
+                    mobileNav.classList.add('opacity-100');
+                    body.classList.add('overflow-hidden');
 
-                // Плавное появление категорий с задержкой
-                navItems.forEach((item, index) => {
-                    setTimeout(() => {
-                        item.classList.add('opacity-100');
-                    }, index * 200); // Задержка 200ms между появлениями элементов
+                    navItems.forEach((item, index) => {
+                        setTimeout(() => {
+                            item.classList.add('opacity-100');
+                        }, index * 200);
+                    });
                 });
-            });
+            }
 
-            closeMenu.addEventListener('click', function () {
-                mobileNav.classList.remove('translate-y-0');
-                mobileNav.classList.remove('opacity-100');
-                mobileNav.classList.add('-translate-y-full');
-                navItems.forEach(item => item.classList.remove('opacity-100'));
-                mobileNav.classList.add('hidden');
-                body.classList.remove('overflow-hidden');
-            });
-
-            document.addEventListener('click', function (e) {
-                if (!burgerToggle.contains(e.target) && !mobileNav.contains(e.target)) {
+            if (closeMenu && mobileNav) {
+                closeMenu.addEventListener('click', function () {
                     mobileNav.classList.remove('translate-y-0');
                     mobileNav.classList.remove('opacity-100');
                     mobileNav.classList.add('-translate-y-full');
                     navItems.forEach(item => item.classList.remove('opacity-100'));
-                    mobileNav.classList.add('hidden');
+                    setTimeout(() => {
+                        mobileNav.classList.add('hidden');
+                    }, 500); // Соответствует duration-500
+                    body.classList.remove('overflow-hidden');
+                });
+            }
+
+            document.addEventListener('click', function (e) {
+                if (mobileNav && !burgerToggle.contains(e.target) && !mobileNav.contains(e.target)) {
+                    mobileNav.classList.remove('translate-y-0');
+                    mobileNav.classList.remove('opacity-100');
+                    mobileNav.classList.add('-translate-y-full');
+                    navItems.forEach(item => item.classList.remove('opacity-100'));
+                    setTimeout(() => {
+                        mobileNav.classList.add('hidden');
+                    }, 500); // Соответствует duration-500
                     body.classList.remove('overflow-hidden');
                 }
             });
@@ -257,23 +345,141 @@
             // Выпадающий список регионов
             const toggleButton = document.getElementById('region-toggle');
             const dropdown = document.getElementById('region-dropdown');
-            const options = dropdown.querySelectorAll('div[data-value]');
+            const options = dropdown ? dropdown.querySelectorAll('div[data-value]') : [];
 
-            toggleButton.addEventListener('click', function () {
-                dropdown.classList.toggle('hidden');
-            });
-
-            options.forEach(option => {
-                option.addEventListener('click', function () {
-                    toggleButton.childNodes[0].textContent = this.getAttribute('data-value');
-                    dropdown.classList.add('hidden');
+            if (toggleButton && dropdown) {
+                toggleButton.addEventListener('click', function () {
+                    dropdown.classList.toggle('hidden');
                 });
-            });
 
-            document.addEventListener('click', function (e) {
-                if (!toggleButton.contains(e.target) && !dropdown.contains(e.target)) {
-                    dropdown.classList.add('hidden');
+                options.forEach(option => {
+                    option.addEventListener('click', function () {
+                        toggleButton.childNodes[0].textContent = this.getAttribute('data-value');
+                        dropdown.classList.add('hidden');
+                    });
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!toggleButton.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Управление выпадающим меню профиля
+            const profileButton = document.getElementById('profile-toggle');
+            const profileDropdown = document.getElementById('profile-dropdown');
+            const hasErrors = @json($errors->has('login') || $errors->has('password'));
+            const showLoginForm = @json(session('show_login_form'));
+
+            if (profileButton && profileDropdown) {
+                profileButton.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    profileDropdown.classList.toggle('opacity-100');
+                    profileDropdown.classList.toggle('visible');
+                    profileDropdown.classList.toggle('invisible');
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!profileButton.contains(e.target) && !profileDropdown.contains(e.target)) {
+                        if (!hasErrors && !showLoginForm) {
+                            profileDropdown.classList.remove('opacity-100');
+                            profileDropdown.classList.remove('visible');
+                            profileDropdown.classList.add('invisible');
+                        }
+                    }
+                });
+
+                if (hasErrors || showLoginForm) {
+                    profileDropdown.classList.add('opacity-100');
+                    profileDropdown.classList.add('visible');
+                    profileDropdown.classList.remove('invisible');
                 }
+            }
+
+            // Управление выпадающим меню корзины
+            const cartButton = document.getElementById('cart-toggle');
+            const cartDropdown = document.getElementById('cart-dropdown');
+
+            if (cartButton && cartDropdown) {
+                cartButton.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    cartDropdown.classList.toggle('opacity-100');
+                    cartDropdown.classList.toggle('visible');
+                    cartDropdown.classList.toggle('invisible');
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!cartButton.contains(e.target) && !cartDropdown.contains(e.target)) {
+                        cartDropdown.classList.remove('opacity-100');
+                        cartDropdown.classList.remove('visible');
+                        cartDropdown.classList.add('invisible');
+                    }
+                });
+            }
+
+            // Переключение видимости пароля
+            const passwordToggle = document.querySelector('.toggle-password');
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggle-password-icon');
+
+            if (passwordToggle && passwordInput && toggleIcon) {
+                passwordToggle.addEventListener('click', function () {
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        toggleIcon.classList.remove('fa-eye');
+                        toggleIcon.classList.add('fa-eye-slash');
+                    } else {
+                        passwordInput.type = 'password';
+                        toggleIcon.classList.remove('fa-eye-slash');
+                        toggleIcon.classList.add('fa-eye');
+                    }
+                });
+            }
+
+            // Кнопка "Scroll to Top"
+            const scrollToTopButton = document.getElementById('scroll-to-top');
+            if (scrollToTopButton) {
+                window.addEventListener('scroll', function () {
+                    if (window.scrollY > 300) {
+                        scrollToTopButton.classList.add('visible');
+                        scrollToTopButton.classList.remove('invisible');
+                        scrollToTopButton.classList.add('opacity-100');
+                    } else {
+                        scrollToTopButton.classList.remove('visible');
+                        scrollToTopButton.classList.add('invisible');
+                        scrollToTopButton.classList.remove('opacity-100');
+                    }
+                });
+
+                scrollToTopButton.addEventListener('click', function () {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+
+            // Плавное скрытие дропдауна при скролле вниз
+            let lastScrollTop = 0;
+            window.addEventListener('scroll', function () {
+                let currentScrollTop = window.scrollY || document.documentElement.scrollTop;
+
+                if (currentScrollTop > lastScrollTop) {
+                    if (!hasErrors && !showLoginForm) {
+                        if (profileDropdown.classList.contains('visible')) {
+                            profileDropdown.classList.remove('opacity-100');
+                            profileDropdown.classList.remove('visible');
+                            profileDropdown.classList.add('invisible');
+                        }
+                    }
+                    if (cartDropdown.classList.contains('visible')) {
+                        cartDropdown.classList.remove('opacity-100');
+                        cartDropdown.classList.remove('visible');
+                        cartDropdown.classList.add('invisible');
+                    }
+                }
+                lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
             });
         });
     </script>

@@ -10,31 +10,85 @@
     <section class="relative w-full min-h-screen bg-black text-white flex items-center justify-center overflow-hidden">
         <!-- Background Video or Image -->
         <div class="absolute inset-0 z-0">
-            <video autoplay muted loop class="w-full h-full object-cover opacity-30">
-                <source src="{{ asset('video/old-bg.mp4') }}" type="video/mp4">
+            <video id="hero-video" muted class="w-full h-full object-cover opacity-30 transition-opacity duration-500">
+                <source src="{{ asset('video/Freshie.mp4') }}" type="video/mp4">
             </video>
         </div>
 
         <!-- Hero Content -->
-        <div class="relative z-10 text-center px-4 sm:px-6 animate-fade-in">
+        <div id="hero-content" class="relative z-10 text-center px-4 sm:px-6 animate-fade-in">
             <h1 class="text-5xl sm:text-7xl md:text-8xl uppercase font-extrabold tracking-widest mb-6 font-montserrat">
                 Freshie
             </h1>
             <p class="text-lg sm:text-xl md:text-2xl uppercase tracking-wider mb-8 text-gray-300">
                 Streetwear Born in Chaos | Est. 2025
             </p>
-            <a href="{{ url('/collections') }}"
+            <a href="{{ url('/collections') }}" id="explore-now"
                 class="inline-block bg-white text-black px-6 py-3 sm:px-8 sm:py-4 text-sm sm:text-lg uppercase rounded-xl font-bold tracking-wider hover:bg-gray-200 transition-all duration-300">
                 Explore Now
             </a>
         </div>
     </section>
 
+    <!-- JavaScript для управления видео и анимацией -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const video = document.getElementById('hero-video');
+            const exploreButton = document.getElementById('explore-now');
+            const heroContent = document.getElementById('hero-content');
+            const linkUrl = exploreButton.getAttribute('href');
+
+            // Устанавливаем видео на первый кадр и приостанавливаем
+            video.currentTime = 0;
+            video.pause();
+
+            // Обработка клика на кнопку
+            exploreButton.addEventListener('click', function (e) {
+                e.preventDefault(); // Предотвращаем немедленный переход
+
+                // Более плавное исчезновение текста с увеличенной продолжительностью
+                heroContent.classList.add('opacity-0', 'blur-sm');
+                heroContent.style.transition = 'opacity 2s ease-out, blur 2s ease-out'; // Увеличили до 2s с мягким переходом
+
+                // Увеличиваем видимость видео (убираем затемнение) одновременно
+                video.classList.remove('opacity-30');
+                video.classList.add('opacity-100');
+                video.style.transition = 'opacity 2s ease-in'; // Синхронизируем с текстом
+
+                // Запускаем видео сразу же
+                video.play(); // Начинаем воспроизведение видео без задержки
+
+                // Полностью убираем контент после завершения анимации текста
+                setTimeout(() => {
+                    heroContent.style.display = 'none';
+                    // Убираем кнопку из контента перед повторным показом
+                    exploreButton.style.display = 'none';
+                }, 2000); // Синхронизируем с продолжительностью анимации (2s)
+
+                // Плавное появление лого и описания перед концом видео
+                video.addEventListener('timeupdate', function () {
+                    // Проверяем, осталось ли 1 секунда до конца видео
+                    if (video.duration - video.currentTime <= 1) {
+                        heroContent.style.display = 'block'; // Показываем контент
+                        heroContent.classList.remove('opacity-0', 'blur-sm'); // Убираем эффекты распыления
+                        heroContent.classList.add('opacity-100'); // Плавное появление
+                        heroContent.style.transition = 'opacity 2s ease-in'; // Плавное появление
+                    }
+                });
+
+                // Переход по ссылке после окончания видео
+                video.addEventListener('ended', function () {
+                    window.location.href = linkUrl; // Переход на /collections
+                }, { once: true }); // Слушатель срабатывает только один раз
+            });
+        });
+    </script>
+
     <!-- About Brand Section -->
     <section class="w-full py-16 sm:py-20 bg-black text-white">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
             <h2 class="text-4xl sm:text-5xl uppercase font-extrabold tracking-widest mb-12 text-center font-montserrat">
-                Who We Are
+                Our Essence
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <!-- Left: Text -->
@@ -133,7 +187,6 @@
                 </table>
             </div>
         </div>
-        </div>
     </section>
 
     <!-- Instagram Section -->
@@ -164,6 +217,7 @@
             </p>
         </div>
     </section>
+
     <!-- Include Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.2/lib/p5.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/p5@1.4.2/lib/addons/p5.sound.min.js"></script> -->

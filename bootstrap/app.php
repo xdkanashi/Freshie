@@ -14,8 +14,4 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->render(function (Throwable $e) {
-            $status = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
-            return response()->view('errors.errors', ['status' => $status], $status);
-        });
     })->create();
