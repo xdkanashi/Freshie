@@ -19,11 +19,9 @@
     0% {
         color: #c0c0c0;
     }
-
     50% {
         color: #d3d3d3;
     }
-
     100% {
         color: #c0c0c0;
     }
@@ -46,7 +44,6 @@
         box-shadow: 0 0 10px rgba(255, 255, 255, 0.5),
             0 0 20px rgba(255, 255, 255, 0.3);
     }
-
     100% {
         box-shadow: 0 0 20px rgba(255, 255, 255, 0.9),
             0 0 30px rgba(255, 255, 255, 0.7);
@@ -303,7 +300,6 @@
     transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-/* Анимация появления галочки */
 .password-requirements .check i.fas.fa-check {
     animation: checkAppear 0.5s ease forwards;
 }
@@ -313,19 +309,16 @@
         transform: scale(0);
         opacity: 0;
     }
-
     50% {
         transform: scale(1.2);
         opacity: 0.7;
     }
-
     100% {
         transform: scale(1);
         opacity: 1;
     }
 }
 
-/* Эффект переливания текста при выполнении условия */
 .password-requirement-item.fulfilled {
     animation: gradientText 2s infinite linear;
 }
@@ -335,19 +328,16 @@
         color: #ffffff;
         text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
     }
-
     50% {
         color: #00ff88;
         text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
     }
-
     100% {
         color: #ffffff;
         text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
     }
 }
 
-/* Эффект переливания текста для невыполненных условий */
 .password-requirement-item.unfulfilled {
     animation: gradientRedText 2s infinite linear;
 }
@@ -357,19 +347,16 @@
         color: #ffffff;
         text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
     }
-
     50% {
         color: #ff4444;
         text-shadow: 0 0 10px rgba(255, 68, 68, 0.8);
     }
-
     100% {
         color: #ffffff;
         text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
     }
 }
 
-/* Анимация для крестика (плавное исчезновение/появление) */
 .password-requirements .check i.fas.fa-times {
     animation: crossFade 0.3s ease forwards;
 }
@@ -378,25 +365,66 @@
     0% {
         opacity: 1;
     }
-
     100% {
         opacity: 0.5;
     }
 }
 
 /* Адаптивность для мобильных устройств */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
+    /* Убираем тени и отступы, растягиваем контейнер на всю ширину */
     .center {
         padding: 0;
+        max-width: 100%;
+        height: auto;
+        min-height: 100vh;
     }
 
     .rotate {
-        max-width: 90%;
+        max-width: 100%;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none; /* Убираем тени */
+        transform: none !important; /* Отключаем вращение */
     }
 
     .row {
-        padding: 0.8rem;
-        margin: 0.8rem 0;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border-radius: 0;
+        box-shadow: none !important; /* Убираем тени при вращении */
+    }
+
+    /* Убираем анимации */
+    .glow-focus:focus,
+    .glow-hover:hover,
+    .glow-always {
+        animation: none;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .animate-pulse-slow {
+        animation: none;
+    }
+
+    .password-requirement-item.fulfilled,
+    .password-requirement-item.unfulfilled {
+        animation: none;
+        color: #ffffff;
+        text-shadow: none;
+    }
+
+    .password-requirements .check i.fas.fa-check,
+    .password-requirements .check i.fas.fa-times {
+        animation: none;
+    }
+
+    /* Выравнивание кнопок Back и Register */
+    .button {
+        width: 100px;
+        font-size: 0.9rem;
+        padding: 0.8rem 1.5rem;
+        min-height: 48px;
     }
 
     .text-2xl,
@@ -409,17 +437,6 @@
         width: 100%;
         padding: 0.6rem 2rem 0.6rem 1rem;
         font-size: 0.9rem;
-    }
-
-    .input-wrapper {
-        width: 100%;
-    }
-
-    .button {
-        width: 80px;
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
-        min-height: 48px;
     }
 
     .eyeball {
@@ -439,24 +456,9 @@
         width: 100%;
         max-width: none;
     }
-
-    .row {
-        flex-direction: column;
-    }
-
-    .logo-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-    }
 }
 
-@media (max-width: 768px) {
-    .rotate {
-        max-width: 85%;
-    }
-
+@media (max-width: 480px) {
     .text-2xl,
     .text-3xl,
     .text-4xl {
@@ -464,92 +466,29 @@
     }
 
     .input {
-        width: 100%;
         padding: 0.5rem 2rem 0.5rem 0.8rem;
-        font-size: 0.9rem;
-    }
-
-    .input-wrapper {
-        width: 100%;
+        font-size: 0.8rem;
     }
 
     .button {
         width: 90px;
-        font-size: 0.9rem;
-        padding: 0.6rem 1.2rem;
-        min-height: 48px;
-    }
-
-    .eyeball {
-        right: 0.5rem;
-        --size: 1rem;
-        top: 45%;
-    }
-
-    .beam {
-        right: 1.25rem;
-        height: 20vw;
-        top: 45%;
-    }
-
-    .logo-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .rotate {
-        max-width: 80%;
-    }
-
-    .text-2xl,
-    .text-3xl,
-    .text-4xl {
-        font-size: 1rem !important;
-    }
-
-    .input {
-        width: 100%;
-        padding: 0.4rem 2rem 0.4rem 0.6rem;
         font-size: 0.8rem;
-    }
-
-    .input-wrapper {
-        width: 100%;
-    }
-
-    .button {
-        width: 100px;
-        font-size: 0.9rem;
-        padding: 0.8rem 1.5rem;
-        min-height: 50px;
+        padding: 0.6rem 1.2rem;
     }
 
     .eyeball {
         right: 0.4rem;
         --size: 0.9rem;
-        top: 45%;
     }
 
     .beam {
         right: 1rem;
         height: 15vw;
-        top: 45%;
-    }
-
-    .logo-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
     }
 }
 
 /* Адаптивность для больших экранов */
-@media (min-width: 768px) {
+@media (min-width: 769px) {
     .row {
         flex-direction: row;
         align-items: flex-start;
@@ -566,12 +505,5 @@
 
     .input-wrapper {
         max-width: 350px;
-    }
-
-    .logo-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
     }
 }

@@ -2,52 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Leaderboard;
 use Illuminate\Http\Request;
+use App\Models\Leaderboard;
+use Illuminate\Support\Facades\Auth;
 
 class LeaderboardController extends Controller
 {
-    public function index()
+    public function store(Request $request)
     {
-        $leaderboard = Leaderboard::orderBy('score', 'desc')
-            ->take(10)
-            ->get(['nickname', 'score']);
-        return response()->json($leaderboard);
+        $request->validate([
+            'score' => 'required|integer',
+        ]);
+
+        $user = Auth::user(); // Получаем текущего аутентифицированного пользователя
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        // Проверяем текущую запись пользователя
+        $existingEntry = Leaderboard::where('user_id', $user->id)->first();
+
+        if ($existingEntry) {
+            // Если запись существует и новый результат больше, обновляем
+            if ($request->score > $existingEntry->score) {
+                $existingEntry->update([
+                    'score' => $request->score,
+                    'updated_at' => now(),
+                ]);
+                return response()->json(['message' => 'Score updated successfully'], 200);
+            }
+            return response()->json(['message' => 'Score not updated (lower or equal to current)'], 200);
+        }
+
+        // Если записи нет, используем upsert для вставки
+        Leaderboard::upsert(
+            [
+                [
+                    'user_id' => $user->id,
+                    'score' => $request->score,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+            ],
+            ['user_id'], // Уникальный ключ
+            ['score', 'updated_at'] // Поля для обновления
+        );
+
+        return response()->json(['message' => 'Score saved successfully'], 200);
     }
 
-    public function save(Request $request)
+    public function leaderboard()
     {
-        \Log::info("Получен запрос сохранения:", $request->all());
+        // Получаем топ-50 записей из таблицы лидеров с сортировкой по убыванию очков
+        $leaderboard = Leaderboard::with('user')
+            ->orderBy('score', 'desc')
+            ->take(50)
+            ->get();
 
-        try {
-            $request->validate([
-                'nickname' => 'required|string|max:20',
-                'score' => 'required|integer|min:0',
-            ]);
-
-            $nickname = $request->input('nickname');
-            $score = $request->input('score');
-
-            $entry = Leaderboard::where('nickname', $nickname)->first();
-
-            if ($entry) {
-                if ($entry->score < $score) {
-                    $entry->update([
-                        'score' => $score,
-                        'updated_at' => now(),
-                    ]);
-                    \Log::info("Обновлена запись:", ['nickname' => $nickname, 'score' => $score]);
-                }
-            } else {
-                Leaderboard::create(['nickname' => $nickname, 'score' => $score]);
-                \Log::info("Создана запись:", ['nickname' => $nickname, 'score' => $score]);
-            }
-
-            $leaderboard = Leaderboard::orderBy('score', 'desc')->take(10)->get(['nickname', 'score']);
-            return response()->json($leaderboard);
-        } catch (\Exception $e) {
-            \Log::error("Ошибка в save:", ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            return response()->json(['error' => 'Internal Server Error'], 500);
-        }
+        // Передаем данные в представление
+        return view('games.leaderboard', compact('leaderboard'));
     }
 }

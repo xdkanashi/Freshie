@@ -10,15 +10,9 @@ class CreateLeaderboardTable extends Migration
     {
         Schema::create('leaderboard', function (Blueprint $table) {
             $table->id();
-            $table->string('nickname');
+            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
             $table->integer('score');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent();
+            $table->timestamps();
         });
-    }
-
-    public function down()
-    {
-        Schema::dropIfExists('leaderboard');
     }
 }

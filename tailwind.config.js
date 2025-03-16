@@ -5,7 +5,11 @@ module.exports = {
         "./resources/**/*.js",
     ],
     theme: {
-        extend: {},
+        extend: {
+            touchAction: {
+                manipulation: "manipulation",
+            },
+        },
     },
     plugins: [],
 };

@@ -62,14 +62,13 @@
                         class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('collections') ? 'border-b-2 border-white' : '' }}">Store</a>
                     <a href="{{ url('/contact') }}"
                         class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('contact') ? 'border-b-2 border-white' : '' }}">Contact</a>
-                    <a href="{{ url('/lookbook') }}"
-                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('lookbook') ? 'border-b-2 border-white' : '' }}">Lookbook</a>
-                    <a href="{{ url('/return-policy') }}"
-                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('return-policy') ? 'border-b-2 border-white' : '' }}">Return
-                        Policy</a>
-                    <a href="/pre-order-status"
-                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('pre-order-status') ? 'border-b-2 border-white' : '' }}">Pre-Order
-                        Status</a>
+                    <a href="{{ url('/shipping') }}"
+                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('shipping') ? 'border-b-2 border-white' : '' }}">Shipping
+                        & Delivery</a>
+                    <a href="{{ url('/games') }}"
+                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('games') ? 'border-b-2 border-white' : '' }}">Games</a>
+                    <a href="{{ url('/leaderboard') }}"
+                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('leaderboard') ? 'border-b-2 border-white' : '' }}">Leaderboard</a>
                 </nav>
             </div>
 
@@ -103,7 +102,7 @@
 
     <!-- Mobile Navigation Menu -->
     <div id="mobile-nav"
-        class="fixed top-0 left-0 w-full h-[50vh] bg-black/90 z-[950] hidden -translate-y-full transition-transform duration-500">
+        class="fixed top-0 left-0 w-full h-[40vh] bg-black/90 z-[950] hidden -translate-y-full transition-transform duration-500">
         <div class="flex flex-col h-full">
             <!-- Close Button (Moved to top) -->
             <div class="flex justify-end p-7">
@@ -112,19 +111,18 @@
                 </button>
             </div>
             <!-- Navigation Links -->
-            <nav class="flex flex-col items-center justify-start flex-grow pt-10 space-y-6">
+            <nav class="flex flex-col items-center justify-start flex-grow space-y-6">
                 <a href="{{ url('/collections') }}"
                     class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('collections') ? 'border-b-2 border-white' : '' }}">Store</a>
                 <a href="{{ url('/contact') }}"
                     class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('contact') ? 'border-b-2 border-white' : '' }}">Contact</a>
-                <a href="{{ url('/lookbook') }}"
-                    class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('lookbook') ? 'border-b-2 border-white' : '' }}">Lookbook</a>
-                <a href="{{ url('/return-policy') }}"
-                    class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('return-policy') ? 'border-b-2 border-white' : '' }}">Return
-                    Policy</a>
-                <a href="/pre-order-status"
-                    class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('pre-order-status') ? 'border-b-2 border-white' : '' }}">Pre-Order
-                    Status</a>
+                <a href="{{ url('/shipping') }}"
+                    class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('shipping') ? 'border-b-2 border-white' : '' }}">Shipping
+                    & Delivery</a>
+                <a href="{{ url('/games') }}"
+                    class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('games') ? 'border-b-2 border-white' : '' }}">Games</a>
+                <a href="{{ url('/leaderboard') }}"
+                    class="text-white text-2xl sm:text-3xl uppercase font-extrabold tracking-widest hover:text-gray-400 opacity-0 transition-opacity duration-300 {{ request()->is('leaderboard') ? 'border-b-2 border-white' : '' }}">Leaderboard</a>
             </nav>
         </div>
     </div>
@@ -168,7 +166,7 @@
                     <div class="relative">
                         <button id="region-toggle"
                             class="w-full bg-black border border-white rounded px-3 py-2 text-xs sm:text-sm flex justify-between items-center uppercase font-bold tracking-wider">
-                            Latvia (USD $) <i class="fas fa-chevron-down"></i>
+                            South Korea (USD $) <i class="fas fa-chevron-down"></i>
                         </button>
                         <div id="region-dropdown"
                             class="absolute top-full left-0 w-full min-w-[200px] bg-black border border-white rounded mt-1 hidden z-10">
@@ -178,8 +176,6 @@
                                 data-value="Spain (USD $)">Spain (USD $)</div>
                             <div class="px-3 py-2 text-xs sm:text-sm uppercase font-bold tracking-wider hover:bg-gray-800 cursor-pointer"
                                 data-value="Sweden (EUR €)">Sweden (EUR €)</div>
-                            <div class="px-3 py-2 text-xs sm:text-sm uppercase font-bold tracking-wider hover:bg-gray-800 cursor-pointer"
-                                data-value="Latvia (EUR €)">Latvia (EUR €)</div>
                         </div>
                     </div>
                 </div>
@@ -193,6 +189,9 @@
                     <a href="{{ url('/terms-of-service') }}"
                         class="text-white no-underline text-xs sm:text-sm uppercase font-bold tracking-wider hover:text-gray-400 {{ request()->is('terms-of-service') ? 'border-b-2 border-white' : '' }}">Terms
                         of Service</a>
+                    <a href="{{ url('/return-policy') }}"
+                        class="text-white no-underline text-xs sm:text-sm uppercase font-bold tracking-wider hover:text-gray-400 {{ request()->is('return-policy') ? 'border-b-2 border-white' : '' }}">Return
+                        Policy</a>
                 </div>
                 <div class="flex space-x-2">
                     <img src="{{ asset('img/google-pay.png') }}" alt="Google Pay" class="h-5 sm:h-6">
@@ -231,14 +230,15 @@
                 <h3 class="text-2xl font-extrabold uppercase tracking-widest text-white mb-5">Sign In</h3>
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
+                    <!-- Добавляем скрытое поле для сохранения текущего URL -->
+                    <input type="hidden" name="intended" value="{{ url()->current() }}">
                     <fieldset class="w-full">
                         <div class="mb-4">
                             <label for="login" class="block mb-2 text-white font-semibold text-sm sm:text-base">Username or
                                 E-Mail</label>
                             <input type="text" name="login" id="login"
                                 class="input w-full mb-2 sm:mb-3 p-2 sm:p-3 text-sm text-white bg-gray-700 rounded-lg shadow-inner focus:shadow-[0_0_15px_rgba(255,255,255,0.9)] focus:outline-none transition-all duration-300 glow-focus"
-                                placeholder="username or email@example.com" value="{{ old('login') }}" required
-                                autocomplete="username" maxlength="50">
+                                value="{{ old('login') }}" required autocomplete="username" maxlength="50">
                             @error('login')
                                 <span class="text-red-500 text-sm block mb-2">{{ $message }}</span>
                             @enderror
@@ -285,7 +285,7 @@
     </div>
 
     <!-- Кнопка "Scroll to Top" слева внизу -->
-    <div class="fixed bottom-4 left-4 w-12 h-12 bg-[#1a1a1a] rounded-full flex items-center justify-center opacity-0 invisible transition-opacity duration-300 z-[1000] md:hidden"
+    <div class="fixed bottom-4 left-4 w-12 h-12 bg-[#1a1a1a] rounded-full flex items-center justify-center opacity-0 invisible transition-opacity duration-300 z-[1000]"
         id="scroll-to-top">
         <i class="fas fa-chevron-up text-white text-2xl"></i>
     </div>
@@ -390,6 +390,7 @@
                     }
                 });
 
+                // Показываем дропдаун при загрузке, если есть ошибки или сессия
                 if (hasErrors || showLoginForm) {
                     profileDropdown.classList.add('opacity-100');
                     profileDropdown.classList.add('visible');
@@ -460,18 +461,16 @@
                 });
             }
 
-            // Плавное скрытие дропдауна при скролле вниз
+            // Плавное скрытие дропдауна при скролле вниз (включая ошибки валидации)
             let lastScrollTop = 0;
             window.addEventListener('scroll', function () {
                 let currentScrollTop = window.scrollY || document.documentElement.scrollTop;
 
                 if (currentScrollTop > lastScrollTop) {
-                    if (!hasErrors && !showLoginForm) {
-                        if (profileDropdown.classList.contains('visible')) {
-                            profileDropdown.classList.remove('opacity-100');
-                            profileDropdown.classList.remove('visible');
-                            profileDropdown.classList.add('invisible');
-                        }
+                    if (profileDropdown.classList.contains('visible')) {
+                        profileDropdown.classList.remove('opacity-100');
+                        profileDropdown.classList.remove('visible');
+                        profileDropdown.classList.add('invisible');
                     }
                     if (cartDropdown.classList.contains('visible')) {
                         cartDropdown.classList.remove('opacity-100');
@@ -483,6 +482,9 @@
             });
         });
     </script>
+
+    <!-- Подключение скриптов из дочерних шаблонов -->
+    @yield('scripts')
 </body>
 
 </html>

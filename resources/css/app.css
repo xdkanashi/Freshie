@@ -10,10 +10,10 @@
     font-family: "Montserrat", sans-serif;
 }
 
-/* Анимация бегущей строки (справа налево) */
+/* Анимация бегущей строки (справа налево) 
 .animate-marquee {
     animation: marquee 15s linear infinite;
-}
+} */
 
 @keyframes marquee {
     0% {
@@ -67,4 +67,31 @@
     opacity: 1;
     transform: translateY(0);
     height: auto;
+}
+
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.grid > div {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.grid > div.visible {
+    opacity: 1;
+    transform: translateY(0);
+
+    #hero-start-video,
+    #hero-video {
+        transition: opacity 1.5s ease-out;
+    }
 }

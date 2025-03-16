@@ -1,0 +1,331 @@
+#scene-container {
+    position: relative;
+    width: 100%;
+    height: 40vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: black;
+}
+
+#scene-container canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Delivery Cards Styles */
+.delivery-cards {
+    position: relative;
+    max-width: 75rem;
+    margin: 0 auto;
+}
+
+.delivery-cards__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5em;
+    justify-content: center;
+    padding: 2em 0;
+}
+
+.delivery-card {
+    --flow-space: 0.5em;
+    --hsl: var(--hue), var(--saturation), var(--lightness);
+    flex: 1 1 14rem;
+    padding: 1.5em 2em;
+    background: rgba(43, 43, 43, 0.8);
+    /* Semi-transparent dark background */
+    backdrop-filter: blur(10px);
+    /* Glass effect */
+    -webkit-backdrop-filter: blur(10px);
+    /* Safari support */
+    border: 1px solid rgba(236, 239, 241, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #eceff1;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.delivery-card:nth-child(1) {
+    --hue: 165;
+    --saturation: 82.26%;
+    --lightness: 51.37%;
+}
+
+.delivery-card:nth-child(2) {
+    --hue: 291.34;
+    --saturation: 95.9%;
+    --lightness: 61.76%;
+}
+
+.delivery-card:nth-child(3) {
+    --hue: 338.69;
+    --saturation: 100%;
+    --lightness: 48.04%;
+}
+
+.delivery-card__heading {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 0.5em;
+}
+
+.delivery-card__time {
+    font-size: 1.75em;
+    font-weight: 700;
+    margin-bottom: 1em;
+}
+
+.delivery-card__bullets {
+    list-style: none;
+    text-align: left;
+    padding: 0;
+    line-height: 1.4;
+}
+
+.delivery-card__bullets li {
+    position: relative;
+    padding-left: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.delivery-card__bullets li::before {
+    content: "✔";
+    position: absolute;
+    left: 0;
+    color: #ddd;
+}
+
+.flow > * + * {
+    margin-top: var(--flow-space, 1em);
+}
+
+.delivery-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    user-select: none;
+    opacity: var(--opacity, 0);
+    /* Use clip-path to constrain the glow within the container */
+    clip-path: inset(0 0 0 0);
+    -webkit-mask: radial-gradient(
+        25rem 25rem at var(--x) var(--y),
+        #000 1%,
+        transparent 50%
+    );
+    mask: radial-gradient(
+        25rem 25rem at var(--x) var(--y),
+        #000 1%,
+        transparent 50%
+    );
+    transition: opacity 400ms ease;
+    will-change: mask;
+}
+
+.delivery-overlay .delivery-card {
+    background-color: hsla(var(--hsl), 0.15);
+    border-color: hsla(var(--hsl), 1);
+    box-shadow: 0 0 0 1px inset hsl(var(--hsl));
+}
+
+/* Контейнер для поля ввода и кнопки */
+#shipping-calculator {
+    width: 100%;
+    max-width: 400px; /* Ограничиваем ширину, как в форме Contact Us */
+    margin: 0 auto;
+}
+
+#shipping-calculator .shipping-control {
+    margin: 0 0 24px;
+}
+
+#shipping-calculator .shipping-control input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    font-family: monospace, serif;
+    letter-spacing: 0.05em;
+    font-size: 16px;
+}
+
+#shipping-calculator .shipping-control input:hover,
+#shipping-calculator .shipping-control input:focus {
+    outline: none;
+    border: 0;
+}
+
+#shipping-calculator .shipping-btn {
+    width: 100%;
+    display: block;
+    padding: 14px 16px;
+    background: transparent;
+    outline: none;
+    border: 0;
+    color: #fff;
+    letter-spacing: 0.1em;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 16px;
+}
+
+/* 3D Cube Effect для блока Shipping */
+.shipping-cube {
+    position: relative;
+}
+
+.shipping-cube .shipping-bg-top {
+    position: absolute;
+    height: 10px;
+    background: transparent;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+    bottom: 100%;
+    left: 5px;
+    right: -5px;
+    transform: skew(-45deg, 0);
+    margin: 0;
+    transition: all 0.2s ease-in-out;
+}
+
+.shipping-cube .shipping-bg-top .shipping-bg-inner {
+    bottom: 0;
+}
+
+.shipping-cube .shipping-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    border: 2px solid white;
+    transition: all 0.2s ease-in-out;
+}
+
+.shipping-cube .shipping-bg-right {
+    position: absolute;
+    background: transparent;
+    border-right: 2px solid white;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    top: -5px;
+    z-index: 0;
+    bottom: 5px;
+    width: 10px;
+    left: 100%;
+    transform: skew(0, -45deg);
+    transition: all 0.2s ease-in-out;
+}
+
+.shipping-cube .shipping-bg-right .shipping-bg-inner {
+    left: 0;
+}
+
+.shipping-cube .shipping-bg .shipping-bg-inner {
+    transition: all 0.2s ease-in-out;
+}
+
+.shipping-cube .shipping-bg-inner {
+    background: transparent;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+}
+
+.shipping-cube .shipping-text {
+    position: relative;
+    z-index: 2;
+}
+
+.shipping-cube.shipping-input input {
+    position: relative;
+    z-index: 2;
+}
+
+/* Подсветка только стенок при фокусе */
+.shipping-cube.shipping-input input:focus ~ .shipping-bg-top,
+.shipping-cube.shipping-input input:focus ~ .shipping-bg-right,
+.shipping-cube.shipping-input input:focus ~ .shipping-bg {
+    background: rgba(255, 0, 0, 0.3); /* Красная подсветка стенок */
+    border-color: rgba(255, 0, 0, 0.7); /* Усиленные красные границы */
+}
+
+/* Убираем подсветку внутренней части контейнера */
+.shipping-cube.shipping-input input:focus {
+    background: transparent; /* Внутренняя часть остаётся прозрачной */
+}
+
+/* Стили для кнопки — изначально прозрачная */
+.shipping-cube.shipping-cube-hover .shipping-bg-top {
+    background: transparent;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+}
+
+.shipping-cube.shipping-cube-hover .shipping-bg {
+    background: transparent;
+    border: 2px solid white;
+}
+
+.shipping-cube.shipping-cube-hover .shipping-bg-right {
+    background: transparent;
+    border-right: 2px solid white;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+/* Красный и чёрный градиент только при наведении */
+.shipping-cube.shipping-cube-hover:hover .shipping-bg-top {
+    background: linear-gradient(
+        90deg,
+        #020202 0%,
+        #cc0101 100%
+    ); /* Чёрный в красный */
+}
+
+.shipping-cube.shipping-cube-hover:hover .shipping-bg {
+    background: linear-gradient(
+        90deg,
+        #020202 0%,
+        #cc0101 100%
+    ); /* Чёрный в красный */
+}
+
+.shipping-cube.shipping-cube-hover:hover .shipping-bg-right {
+    background: #bb0000; /* Красный для боковой стенки */
+}
+
+.shipping-cube.shipping-cube-hover:hover .shipping-bg .shipping-bg-inner {
+    background: rgba(
+        255,
+        255,
+        255,
+        0.1
+    ); /* Лёгкая прозрачность при наведении */
+}
+
+.fade-in-section,
+.fade-in-grid-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.fade-in-section.visible,
+.fade-in-grid-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#typing-animation-container {
+    transition: opacity 1s ease-in-out, height 1s ease-in-out;
+}

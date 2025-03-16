@@ -1,0 +1,24 @@
+.canvas-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px; /* Максимальная ширина для десктопов */
+    margin: 0 auto;
+}
+
+#canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1; /* Сохраняем пропорции 1:1 */
+}
+
+@media (max-width: 640px) {
+    .canvas-container {
+        max-width: 100%; /* На мобильных устройствах занимает всю ширину */
+        padding: 0 10px; /* Добавляем отступы по бокам */
+    }
+
+    #canvas {
+        width: 100%;
+        height: auto;
+    }
+}

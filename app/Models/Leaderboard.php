@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Leaderboard extends Model
 {
-    use HasFactory;
+    protected $table = 'leaderboard';
+    protected $fillable = ['user_id', 'score'];
 
-    protected $table = 'leaderboard'; // Явно указываем имя таблицы
-    protected $fillable = ['nickname', 'score'];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

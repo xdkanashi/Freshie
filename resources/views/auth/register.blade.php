@@ -98,7 +98,7 @@
                             </fieldset>
                         </form>
 
-                        <!-- Password Requirements (Unified but styled for right alignment) -->
+                        <!-- Password Requirements -->
                         <div
                             class="password-requirements mt-4 md:mt-0 p-4 bg-black bg-opacity-50 rounded-lg border border-gray-600 w-full md:w-[250px] md:ml-4">
                             <h3 class="text-lg font-bold text-white mb-2">Password Requirements:</h3>
@@ -122,11 +122,11 @@
                         </div>
                     </div>
                     <div class="row p-4 sm:p-5 my-4 sm:my-5">
-                        <div
-                            class="flex flex-col sm:flex-row items-center justify-between w-full space-y-3 sm:space-y-0 sm:space-x-5">
-                            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-                                <button type="button" id="back"
-                                    class="button w-[70px] sm:w-[80px] md:w-[100px] h-7 sm:h-8 md:h-10 bg-gray-900 text-white text-sm font-bold rounded-full shadow-lg hover:shadow-[0_0_15px_rgba(255,255,255,0.9)] transition-all duration-300 glow-always">Back</button>
+                        <div class="flex items-center justify-between w-full">
+                            <button type="button" id="back"
+                                class="button w-[70px] sm:w-[80px] md:w-[100px] h-7 sm:h-8 md:h-10 bg-gray-900 text-white text-sm font-bold rounded-full shadow-lg hover:shadow-[0_0_15px_rgba(255,255,255,0.9)] transition-all duration-300 glow-always">Back</button>
+                            <!-- Кнопки Reset и Perspective скрыты на мобильных устройствах -->
+                            <div class="hidden md:flex space-x-3">
                                 <button type="button" id="toggle"
                                     class="button w-[70px] sm:w-[80px] md:w-[100px] h-7 sm:h-8 md:h-10 bg-gray-700 text-white text-sm font-bold rounded-full shadow-lg hover:shadow-[0_0_15px_rgba(255,255,255,0.9)] transition-all duration-300 glow-always">Reset</button>
                                 <button type="button" id="toggle-view"
@@ -141,7 +141,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer (оставлен без изменений) -->
     <footer class="bg-black bg-opacity-50 text-white py-8 sm:py-10 border-t border-gray-700 font-montserrat">
         <div class="max-w-6xl mx-auto px-4 sm:px-5">
             <!-- Top Section -->
@@ -244,7 +244,7 @@
                 'z-index': 20
             });
 
-            // Сброс вращения
+            // Сброс вращения (только для десктопов)
             $('#toggle').click(function () {
                 rotationX = 0;
                 rotationY = 0;
@@ -260,7 +260,7 @@
                 $('.rotate').removeClass('rotated');
             });
 
-            // Переключение перспективы
+            // Переключение перспективы (только для десктопов)
             $('#toggle-view').click(function () {
                 isPerspective = !isPerspective;
                 $('.center').toggleClass('view', isPerspective);
@@ -293,75 +293,76 @@
                 }
             });
 
-            // Вращение формы (отключаем перехват событий для полей ввода)
-            $('.rotate').on('mousedown touchstart', function (e) {
-                if (!$(e.target).is('input')) {
-                    isDragging = true;
-                    e.preventDefault();
-                    if (e.type === 'touchstart') {
-                        previousX = e.originalEvent.touches[0].clientX;
-                        previousY = e.originalEvent.touches[0].clientY;
-                    } else {
-                        previousX = e.clientX;
-                        previousY = e.clientY;
+            // Вращение формы (отключаем на мобильных)
+            if ($(window).width() > 768) {
+                $('.rotate').on('mousedown touchstart', function (e) {
+                    if (!$(e.target).is('input')) {
+                        isDragging = true;
+                        e.preventDefault();
+                        if (e.type === 'touchstart') {
+                            previousX = e.originalEvent.touches[0].clientX;
+                            previousY = e.originalEvent.touches[0].clientY;
+                        } else {
+                            previousX = e.clientX;
+                            previousY = e.clientY;
+                        }
                     }
-                }
-            });
+                });
 
-            $(document).on('mousemove touchmove', function (e) {
-                if (isDragging) {
-                    let currentX, currentY;
-                    if (e.type === 'touchmove') {
-                        currentX = e.originalEvent.touches[0].clientX;
-                        currentY = e.originalEvent.touches[0].clientY;
-                    } else {
-                        currentX = e.clientX;
-                        currentY = e.clientY;
+                $(document).on('mousemove touchmove', function (e) {
+                    if (isDragging) {
+                        let currentX, currentY;
+                        if (e.type === 'touchmove') {
+                            currentX = e.originalEvent.touches[0].clientX;
+                            currentY = e.originalEvent.touches[0].clientY;
+                        } else {
+                            currentX = e.clientX;
+                            currentY = e.clientY;
+                        }
+
+                        let deltaX = currentX - previousX;
+                        let deltaY = currentY - previousY;
+
+                        rotationY += deltaX * 0.3;
+                        rotationX -= deltaY * 0.3;
+
+                        rotationX = Math.max(-90, Math.min(90, rotationX));
+                        rotationY = Math.max(-180, Math.min(180, rotationY));
+
+                        $('.rotate').css({
+                            'transform': `rotateX(${rotationX}deg) rotateY(${rotationY}deg) rotateZ(${rotationZ}deg)`,
+                            'pointer-events': 'auto',
+                            'opacity': 1
+                        });
+
+                        if (!isPerspective) {
+                            isPerspective = true;
+                            $('.center').addClass('view');
+                        }
+
+                        $('.rotate input').prop('disabled', false).css({
+                            'pointer-events': 'auto',
+                            'z-index': 20
+                        });
+                        previousX = currentX;
+                        previousY = currentY;
                     }
+                });
 
-                    let deltaX = currentX - previousX;
-                    let deltaY = currentY - previousY;
-
-                    rotationY += deltaX * 0.3;
-                    rotationX -= deltaY * 0.3;
-
-                    rotationX = Math.max(-90, Math.min(90, rotationX));
-                    rotationY = Math.max(-180, Math.min(180, rotationY));
-
-                    $('.rotate').css({
-                        'transform': `rotateX(${rotationX}deg) rotateY(${rotationY}deg) rotateZ(${rotationZ}deg)`,
-                        'pointer-events': 'auto',
-                        'opacity': 1
-                    });
-
-                    if (!isPerspective) {
-                        isPerspective = true;
-                        $('.center').addClass('view');
-                    }
-
+                $(document).on('mouseup touchend', function () {
+                    isDragging = false;
                     $('.rotate input').prop('disabled', false).css({
                         'pointer-events': 'auto',
                         'z-index': 20
                     });
-                    previousX = currentX;
-                    previousY = currentY;
-                }
-            });
-
-            $(document).on('mouseup touchend', function () {
-                isDragging = false;
-                $('.rotate input').prop('disabled', false).css({
-                    'pointer-events': 'auto',
-                    'z-index': 20
                 });
-            });
 
-            // Предотвращаем прокрутку страницы, но не вмешиваемся в поля ввода
-            $('.rotate').on('touchmove', function (e) {
-                if (!$(e.target).is('input')) {
-                    e.stopPropagation();
-                }
-            });
+                $('.rotate').on('touchmove', function (e) {
+                    if (!$(e.target).is('input')) {
+                        e.stopPropagation();
+                    }
+                });
+            }
 
             // Возвращение на предыдущую страницу
             $('#back').click(function () {
@@ -388,7 +389,7 @@
                 }
             });
 
-            // Password visibility toggle and beam effect for both password fields
+            // Password visibility toggle and beam effect
             const root = document.documentElement;
             const eye = document.getElementById('eyeball');
             const beam = document.getElementById('beam');
@@ -397,7 +398,6 @@
             const beamConfirm = document.getElementById('beam_confirm');
             const passwordConfirmInput = document.getElementById('password_confirmation');
 
-            // Обработка движения мыши и касания
             function updateBeam(e) {
                 let clientX, clientY;
                 if (e.type === 'touchmove') {
@@ -408,7 +408,6 @@
                     clientY = e.clientY;
                 }
 
-                // Для первого поля пароля
                 let rect = beam.getBoundingClientRect();
                 let mouseX = rect.right + (rect.width / 2);
                 let mouseY = rect.top + (rect.height / 2);
@@ -416,7 +415,6 @@
                 let degrees = (rad * (20 / Math.PI) * -1) - 350;
                 root.style.setProperty('--beamDegrees', `${degrees}deg`);
 
-                // Для поля подтверждения пароля
                 let rectConfirm = beamConfirm.getBoundingClientRect();
                 let mouseXConfirm = rectConfirm.right + (rectConfirm.width / 2);
                 let mouseYConfirm = rectConfirm.top + (rectConfirm.height / 2);
@@ -446,7 +444,6 @@
                 const password = passwordInput.value;
                 const confirmPassword = passwordConfirmInput.value;
 
-                // Check for at least 1 capital letter
                 if (/[A-Z]/.test(password)) {
                     $('#capital .check').html('<i class="fas fa-check"></i>').removeClass('text-red-500').addClass(
                         'text-green-500');
@@ -457,7 +454,6 @@
                     $('.password-requirement-item#capital').removeClass('fulfilled').addClass('unfulfilled');
                 }
 
-                // Check for minimum 6 characters
                 if (password.length >= 6) {
                     $('#length .check').html('<i class="fas fa-check"></i>').removeClass('text-red-500').addClass(
                         'text-green-500');
@@ -468,7 +464,6 @@
                     $('.password-requirement-item#length').removeClass('fulfilled').addClass('unfulfilled');
                 }
 
-                // Check for at least 1 number
                 if (/[0-9]/.test(password)) {
                     $('#number .check').html('<i class="fas fa-check"></i>').removeClass('text-red-500').addClass(
                         'text-green-500');
@@ -479,7 +474,6 @@
                     $('.password-requirement-item#number').removeClass('fulfilled').addClass('unfulfilled');
                 }
 
-                // Check if passwords match
                 if (password === confirmPassword && password.length > 0 && confirmPassword.length > 0) {
                     $('#match .check').html('<i class="fas fa-check"></i>').removeClass('text-red-500').addClass(
                         'text-green-500');

@@ -49,4 +49,29 @@ class PageController extends Controller
     {
         return view('pre-order-status');
     }
+
+    public function shipping()
+    {
+        return view('shipping');
+    }
+
+    public function games()
+    {
+        return view('games.games');
+    }
+
+    public function gogogame()
+    {
+        return view('games.gogo-game');
+    }
+
+    public function blockstackgame()
+    {
+        return view('games.blockstack-game');
+    }
+
+    public function bendygame()
+    {
+        return view('games.bendy-game');
+    }
 }

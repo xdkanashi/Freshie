@@ -1,0 +1,193 @@
+.game-item {
+    display: block;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative; /* Для корректного наложения видео */
+}
+
+.game-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.game-item img,
+.game-item video {
+    width: 100%;
+    height: 100%; /* Растягиваем на весь контейнер */
+    object-fit: cover;
+    display: block;
+}
+
+/* Position video absolutely to overlay the image */
+.game-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* Растягиваем видео на весь контейнер */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.game-item:hover .game-video {
+    opacity: 1;
+}
+
+.game-item:hover .game-image {
+    opacity: 0; /* Скрываем изображение при наведении */
+}
+
+/* Category header styling */
+h2 {
+    color: #fff;
+    border-bottom: 2px solid #333;
+    padding-bottom: 0.5rem;
+}
+
+/* Remove default link underline */
+.game-item p {
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+/* Fade-in animation (optional, reuse from shipping) */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.game-item {
+    display: block;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    aspect-ratio: 3 / 2; /* Соотношение сторон 3:2 для единообразия */
+}
+
+/* Rain effect CSS */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+:root {
+    --clr: #0f0;
+    /* Green neon color */
+}
+
+.rain-container {
+    position: relative;
+    top: 220px;
+    /* Increased from 50px to 150px to move it lower */
+    height: 400px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    animation: animateColor 5s linear infinite;
+}
+
+@keyframes animateColor {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+.rain-container .cloud {
+    position: relative;
+    width: 300px;
+    z-index: 100;
+    filter: drop-shadow(0 0 35px var(--clr));
+}
+
+.rain-container .cloud h2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    color: #000;
+    font-size: 2em;
+    z-index: 1000;
+    font-weight: 400;
+    padding: 0 10px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    background: var(--clr);
+}
+
+.rain-container .cloud h2::before {
+    content: "";
+    position: absolute;
+    top: -115px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 100px;
+    width: 120%;
+    height: 100px;
+    background: var(--clr);
+}
+
+.rain-container .cloud h2::after {
+    content: "";
+    position: absolute;
+    top: -150px;
+    left: 25px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--clr);
+    box-shadow: 120px -30px 0 10px var(--clr);
+}
+
+.rain-container .cloud .drop {
+    position: absolute;
+    top: 60px;
+    height: 20px;
+    line-height: 20px;
+    color: var(--clr);
+    transform-origin: bottom;
+    animation: animate 2s linear infinite;
+}
+
+@keyframes animate {
+    0% {
+        transform: translateY(0) scaleY(0);
+        transform-origin: top;
+    }
+
+    10% {
+        transform: translateY(0) scaleY(0.25);
+        transform-origin: top;
+    }
+
+    20% {
+        transform: translateY(0) scaleY(1);
+    }
+
+    70% {
+        transform: translateY(300px) scaleY(1);
+        transform-origin: bottom;
+    }
+
+    80% {
+        transform: translateY(300px) scaleY(1);
+        transform-origin: bottom;
+    }
+
+    100% {
+        transform: translateY(300px) scaleY(0);
+        transform-origin: bottom;
+        text-shadow: -180px 0 0 var(--clr), 180px 0 var(--clr);
+    }
+}

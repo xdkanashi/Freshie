@@ -17,7 +17,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/'; // Перенаправляем на главную страницу
+    protected $redirectTo = '/'; // Значение по умолчанию
 
     /**
      * Create a new controller instance.
@@ -26,7 +26,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        // Конструктор теперь пустой, так как middleware определены атрибутами
+        // Конструктор остается пустым
     }
 
     /**
@@ -36,7 +36,7 @@ class LoginController extends Controller
      */
     public function username()
     {
-        return 'login'; // Указываем, что поле в форме называется "login"
+        return 'login';
     }
 
     /**
@@ -79,10 +79,8 @@ class LoginController extends Controller
      */
     protected function sendFailedLoginResponse(Request $request)
     {
-        // Добавляем флаг в сессию, чтобы открыть форму после перезагрузки
         $request->session()->flash('show_login_form', true);
 
-        // Возвращаем redirect с ошибками
         return redirect()->back()
             ->withInput($request->only('login'))
             ->withErrors([
@@ -101,7 +99,6 @@ class LoginController extends Controller
         $login = $request->input('login');
         $field = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        // Проверяем, существует ли пользователь
         $user = \App\Models\User::where($field, $login)->first();
 
         if (!$user) {
@@ -109,5 +106,17 @@ class LoginController extends Controller
         }
 
         return 'The password is incorrect.';
+    }
+
+    /**
+     * Переопределяем редирект после успешного логина.
+     *
+     * @return string
+     */
+    protected function redirectTo()
+    {
+        // Используем request() для доступа к текущему запросу
+        $intended = request()->input('intended') ?: session()->pull('url.intended', $this->redirectTo);
+        return $intended;
     }
 }
