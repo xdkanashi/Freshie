@@ -37,72 +37,71 @@
 </head>
 
 <body class="bg-black text-white font-sans">
-    <!-- Frozen Line -->
-    <div
-        class="frozen-line bg-black text-white text-center py-2 fixed top-0 w-full overflow-hidden whitespace-nowrap animate-fade-in h-8 z-[1000]">
-        <span class="inline-block text-xs sm:text-sm uppercase font-bold tracking-widest animate-marquee">
-            FREE SHIPPING WORLDWIDE | WEBSITE BY RAMMENZ | USE HELLSTAR12 TO GET 15% OFF | FRESHIE PREMIUM THEME
-        </span>
-    </div>
-
     <!-- Header -->
-    <header class="w-full bg-black/90 py-3 min-h-[70px] pt-4 z-[900] overflow-visible">
+    <header class="w-full bg-black/90 py-4 min-h-[140px] z-[900] overflow-visible relative">
         <div class="max-w-6xl mx-auto px-4 sm:px-5 flex items-center justify-between animate-fade-in">
-            <!-- Left: Burger Menu for Mobile -->
-            <div class="md:hidden flex items-center space-x-4">
+            <!-- Mobile: Burger Menu on Left -->
+            <div class="md:hidden flex items-center absolute top-16 md:static">
                 <button id="burger-toggle" class="text-white text-2xl hover:text-gray-400">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
 
-            <!-- Left: Navigation (Desktop) -->
-            <div class="hidden md:block flex-shrink-0">
-                <nav class="flex space-x-4">
-                    <a href="{{ url('/collections') }}"
-                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('collections') ? 'border-b-2 border-white' : '' }}">Store</a>
-                    <a href="{{ url('/contact') }}"
-                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('contact') ? 'border-b-2 border-white' : '' }}">Contact</a>
-                    <a href="{{ url('/shipping') }}"
-                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('shipping') ? 'border-b-2 border-white' : '' }}">Shipping
-                        & Delivery</a>
-                    <a href="{{ url('/games') }}"
-                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('games') ? 'border-b-2 border-white' : '' }}">Games</a>
-                    <a href="{{ url('/leaderboard') }}"
-                        class="text-white no-underline text-sm sm:text-lg uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('leaderboard') ? 'border-b-2 border-white' : '' }}">Leaderboard</a>
-                </nav>
-            </div>
-
-            <!-- Center: Logo Animation with Homepage Link -->
-            <div class="flex-shrink-0 mx-auto md:mx-0">
+            <!-- Logo: Centered on Mobile, Left on Desktop -->
+            <div
+                class="flex-shrink-0 md:order-1 order-2 absolute left-1/2 top-1 transform -translate-x-1/2 md:static md:transform-none">
                 <a href="{{ url('/') }}">
-                    <img src="{{ asset('img/logo-removebg.png') }}" alt="Freshie Logo"
-                        class="h-16 sm:h-20 md:h-24 object-contain animate-pulse-slow cursor-pointer">
+                    <div id="logo-container"
+                        class="h-40 sm:h-44 md:h-60 w-36 sm:w-40 md:w-48 min-h-[10rem] min-w-[9rem]"
+                        style="cursor: grab; touch-action: manipulation;"></div>
                 </a>
             </div>
 
-            <!-- Right: Icons (Mobile & Desktop) -->
-            <div class="flex items-center space-x-3 sm:space-x-4">
-                <!-- Cart Icon -->
-                <div class="relative">
-                    <button id="cart-toggle" class="text-white text-xl sm:text-2xl hover:text-gray-400 hover:scale-105">
-                        <i class="fas fa-shopping-cart"></i>
-                    </button>
-                </div>
-
+            <!-- Right: Profile and Cart Icons (Always on Right) -->
+            <div
+                class="flex items-center space-x-3 sm:space-x-4 md:order-3 absolute top-16 right-4 md:static md:right-auto">
                 <!-- Profile Icon -->
                 <div class="relative">
                     <button id="profile-toggle"
-                        class="text-white text-xl sm:text-2xl hover:text-gray-400 hover:scale-105">
+                        class="text-white text-2xl sm:text-3xl hover:text-gray-400 hover:scale-105">
                         <i class="fas fa-user"></i>
                     </button>
                 </div>
+                <!-- Cart Icon -->
+                <div class="relative">
+                    <button id="cart-toggle"
+                        class="text-white text-2xl sm:text-3xl hover:text-gray-400 hover:scale-105">
+                        <i class="fas fa-shopping-cart"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Center: Navigation (Desktop Only) -->
+            <div class="hidden md:flex items-center justify-center flex-1 md:order-2">
+                <nav class="flex flex-col space-y-4">
+                    <div class="flex space-x-4 justify-center">
+                        <a href="{{ url('/collections') }}"
+                            class="text-white no-underline text-xl uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('collections') ? 'border-b-2 border-white' : '' }}">Store</a>
+                        <a href="{{ url('/contact') }}"
+                            class="text-white no-underline text-xl uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('contact') ? 'border-b-2 border-white' : '' }}">Contact</a>
+                        <a href="{{ url('/shipping') }}"
+                            class="text-white no-underline text-xl uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('shipping') ? 'border-b-2 border-white' : '' }}">Shipping
+                            & Delivery</a>
+                    </div>
+                    <div class="flex space-x-4 justify-center">
+                        <a href="{{ url('/games') }}"
+                            class="text-white no-underline text-xl uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('games') ? 'border-b-2 border-white' : '' }}">Games</a>
+                        <a href="{{ url('/leaderboard') }}"
+                            class="text-white no-underline text-xl uppercase font-extrabold tracking-wider hover:text-gray-400 {{ request()->is('leaderboard') ? 'border-b-2 border-white' : '' }}">Leaderboard</a>
+                    </div>
+                </nav>
             </div>
         </div>
     </header>
 
     <!-- Mobile Navigation Menu -->
     <div id="mobile-nav"
-        class="fixed top-0 left-0 w-full h-[40vh] bg-black/90 z-[950] hidden -translate-y-full transition-transform duration-500">
+        class="fixed top-0 left-0 w-full h-[42vh] bg-black/90 z-[950] hidden -translate-y-full transition-transform duration-500">
         <div class="flex flex-col h-full">
             <!-- Close Button (Moved to top) -->
             <div class="flex justify-end p-7">
@@ -128,7 +127,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="pt-[40px] sm:pt-[48px] z-[100]">
+    <main class="pt-[72px] sm:pt-[80px] md:pt-0 z-[100]">
         @yield('content')
     </main>
 
@@ -230,7 +229,6 @@
                 <h3 class="text-2xl font-extrabold uppercase tracking-widest text-white mb-5">Sign In</h3>
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
-                    <!-- Добавляем скрытое поле для сохранения текущего URL -->
                     <input type="hidden" name="intended" value="{{ url()->current() }}">
                     <fieldset class="w-full">
                         <div class="mb-4">
@@ -291,8 +289,119 @@
     </div>
 
     <!-- JavaScript -->
-    <script>
+    <script type="module">
+        import * as THREE from "https://cdn.skypack.dev/three@0.134.0";
+        import { GLTFLoader } from "https://cdn.skypack.dev/three@0.134.0/examples/jsm/loaders/GLTFLoader.js";
+
         document.addEventListener('DOMContentLoaded', function () {
+            // Инициализация 3D-логотипа
+            const logoContainer = document.getElementById('logo-container');
+            let scene, camera, renderer, model;
+            let mouseX = 0;
+            let isDragging = false;
+            let isLogoVisible = false;
+
+            function init3DLogo() {
+                if (!logoContainer) {
+                    console.error('Logo container not found');
+                    return;
+                }
+
+                console.log('Initializing 3D logo...');
+
+                scene = new THREE.Scene();
+                camera = new THREE.PerspectiveCamera(75, logoContainer.clientWidth / logoContainer.clientHeight, 0.1, 1000);
+                renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                renderer.setSize(logoContainer.clientWidth, logoContainer.clientHeight);
+                logoContainer.appendChild(renderer.domElement);
+
+                // Освещение
+                const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+                scene.add(ambientLight);
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+                directionalLight.position.set(0, 1, 1);
+                scene.add(directionalLight);
+
+                // Загрузка модели
+                const loader = new GLTFLoader();
+                loader.load('/models/freshlog4v.glb', function (gltf) {
+                    console.log('Logo model loaded successfully');
+                    model = gltf.scene;
+                    const isMobile = window.innerWidth < 768;
+                    model.scale.set(isMobile ? 4.0 : 5.4, isMobile ? 4.0 : 5.4, isMobile ? 4.0 : 5.4);
+                    model.position.set(0, -2.3, 0);
+                    scene.add(model);
+                    isLogoVisible = true; // Модель загружена, можно рендерить
+                }, (progress) => {
+                    console.log(`Loading logo model: ${(progress.loaded / progress.total * 100).toFixed(2)}%`);
+                }, (error) => {
+                    console.error('Error loading logo model:', error);
+                    isLogoVisible = false;
+                });
+
+                camera.position.z = 5;
+
+                // Обработка событий мыши
+                logoContainer.addEventListener('mousedown', (event) => {
+                    if (event.button === 0) {
+                        isDragging = true;
+                        logoContainer.style.cursor = 'grabbing';
+                    }
+                });
+                document.addEventListener('mouseup', (event) => {
+                    if (event.button === 0) {
+                        isDragging = false;
+                        logoContainer.style.cursor = 'grab';
+                    }
+                });
+                document.addEventListener('mousemove', (event) => {
+                    if (isDragging && model) {
+                        const deltaX = event.movementX * 0.005;
+                        model.rotation.y += deltaX;
+                    }
+                });
+
+                // Поддержка сенсорных устройств
+                logoContainer.addEventListener('touchstart', (event) => {
+                    isDragging = true;
+                    mouseX = event.touches[0].clientX;
+                    logoContainer.style.cursor = 'grabbing';
+                });
+                logoContainer.addEventListener('touchend', () => {
+                    isDragging = false;
+                    logoContainer.style.cursor = 'grab';
+                });
+                logoContainer.addEventListener('touchmove', (event) => {
+                    if (isDragging && model) {
+                        const newMouseX = event.touches[0].clientX;
+                        const deltaX = (newMouseX - mouseX) * 0.005;
+                        model.rotation.y += deltaX;
+                        mouseX = newMouseX;
+                    }
+                });
+
+                // Автовращение и рендеринг
+                function animateLogo() {
+                    requestAnimationFrame(animateLogo);
+                    if (!isLogoVisible) return; // Не рендерим, если логотип не виден
+                    if (model && !isDragging) {
+                        model.rotation.y += 0.003;
+                    }
+                    renderer.render(scene, camera);
+                }
+                animateLogo();
+
+                // Адаптация размера при изменении окна
+                window.addEventListener('resize', () => {
+                    if (logoContainer.clientWidth > 0 && logoContainer.clientHeight > 0) {
+                        renderer.setSize(logoContainer.clientWidth, logoContainer.clientHeight);
+                        camera.aspect = logoContainer.clientWidth / logoContainer.clientHeight;
+                        camera.updateProjectionMatrix();
+                    }
+                });
+            }
+            init3DLogo();
+
             // Бургер-меню
             const burgerToggle = document.getElementById('burger-toggle');
             const mobileNav = document.getElementById('mobile-nav');
@@ -324,7 +433,7 @@
                     navItems.forEach(item => item.classList.remove('opacity-100'));
                     setTimeout(() => {
                         mobileNav.classList.add('hidden');
-                    }, 500); // Соответствует duration-500
+                    }, 500);
                     body.classList.remove('overflow-hidden');
                 });
             }
@@ -337,7 +446,7 @@
                     navItems.forEach(item => item.classList.remove('opacity-100'));
                     setTimeout(() => {
                         mobileNav.classList.add('hidden');
-                    }, 500); // Соответствует duration-500
+                    }, 500);
                     body.classList.remove('overflow-hidden');
                 }
             });
@@ -369,6 +478,7 @@
             // Управление выпадающим меню профиля
             const profileButton = document.getElementById('profile-toggle');
             const profileDropdown = document.getElementById('profile-dropdown');
+            const passwordInput = document.getElementById('password');
             const hasErrors = @json($errors->has('login') || $errors->has('password'));
             const showLoginForm = @json(session('show_login_form'));
 
@@ -382,7 +492,7 @@
 
                 document.addEventListener('click', function (e) {
                     if (!profileButton.contains(e.target) && !profileDropdown.contains(e.target)) {
-                        if (!hasErrors && !showLoginForm) {
+                        if (!hasErrors && !showLoginForm && !document.activeElement.matches('#login, #password')) {
                             profileDropdown.classList.remove('opacity-100');
                             profileDropdown.classList.remove('visible');
                             profileDropdown.classList.add('invisible');
@@ -390,7 +500,14 @@
                     }
                 });
 
-                // Показываем дропдаун при загрузке, если есть ошибки или сессия
+                if (passwordInput) {
+                    passwordInput.addEventListener('focus', function () {
+                        profileDropdown.classList.add('opacity-100');
+                        profileDropdown.classList.add('visible');
+                        profileDropdown.classList.remove('invisible');
+                    });
+                }
+
                 if (hasErrors || showLoginForm) {
                     profileDropdown.classList.add('opacity-100');
                     profileDropdown.classList.add('visible');
@@ -421,7 +538,6 @@
 
             // Переключение видимости пароля
             const passwordToggle = document.querySelector('.toggle-password');
-            const passwordInput = document.getElementById('password');
             const toggleIcon = document.getElementById('toggle-password-icon');
 
             if (passwordToggle && passwordInput && toggleIcon) {
@@ -461,13 +577,13 @@
                 });
             }
 
-            // Плавное скрытие дропдауна при скролле вниз (включая ошибки валидации)
+            // Плавное скрытие дропдауна при скролле вниз
             let lastScrollTop = 0;
             window.addEventListener('scroll', function () {
                 let currentScrollTop = window.scrollY || document.documentElement.scrollTop;
 
                 if (currentScrollTop > lastScrollTop) {
-                    if (profileDropdown.classList.contains('visible')) {
+                    if (profileDropdown.classList.contains('visible') && !document.activeElement.matches('#login, #password')) {
                         profileDropdown.classList.remove('opacity-100');
                         profileDropdown.classList.remove('visible');
                         profileDropdown.classList.add('invisible');
@@ -483,7 +599,6 @@
         });
     </script>
 
-    <!-- Подключение скриптов из дочерних шаблонов -->
     @yield('scripts')
 </body>
 
