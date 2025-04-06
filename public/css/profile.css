@@ -1,0 +1,144 @@
+/* 3D Cube Effect */
+.block-cube {
+    position: relative;
+}
+
+.block-cube .bg-top {
+    position: absolute;
+    height: 10px;
+    background: transparent;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+    bottom: 100%;
+    left: 5px;
+    right: -5px;
+    transform: skew(-45deg, 0);
+    margin: 0;
+    transition: all 0.2s ease-in-out;
+}
+
+.block-cube .bg-top .bg-inner {
+    bottom: 0;
+}
+
+.block-cube .bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    border: 2px solid white;
+    transition: all 0.2s ease-in-out;
+}
+
+.block-cube .bg-right {
+    position: absolute;
+    background: transparent;
+    border-right: 2px solid white;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    top: -5px;
+    z-index: 0;
+    bottom: 5px;
+    width: 10px;
+    left: 100%;
+    transform: skew(0, -45deg);
+    transition: all 0.2s ease-in-out;
+}
+
+.block-cube .bg-right .bg-inner {
+    left: 0;
+}
+
+.block-cube .bg .bg-inner {
+    transition: all 0.2s ease-in-out;
+}
+
+.block-cube .bg-inner {
+    background: transparent;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+}
+
+.block-cube .text {
+    position: relative;
+    z-index: 2;
+}
+
+.block-cube.block-input input,
+.block-cube.block-input textarea {
+    position: relative;
+    z-index: 2;
+}
+
+/* Подсветка только стенок при фокусе */
+.block-cube.block-input input:focus ~ .bg-top,
+.block-cube.block-input input:focus ~ .bg-right,
+.block-cube.block-input input:focus ~ .bg,
+.block-cube.block-input textarea:focus ~ .bg-top,
+.block-cube.block-input textarea:focus ~ .bg-right,
+.block-cube.block-input textarea:focus ~ .bg {
+    background: rgba(255, 0, 0, 0.3); /* Красная подсветка стенок */
+    border-color: rgba(255, 0, 0, 0.7); /* Усиленные красные границы */
+}
+
+/* Убираем подсветку внутренней части контейнера */
+.block-cube.block-input input:focus,
+.block-cube.block-input textarea:focus {
+    background: transparent; /* Внутренняя часть остаётся прозрачной */
+}
+
+/* Стили для кнопки — изначально прозрачная */
+.block-cube.block-cube-hover .bg-top {
+    background: transparent;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+}
+
+.block-cube.block-cube-hover .bg {
+    background: transparent;
+    border: 2px solid white;
+}
+
+.block-cube.block-cube-hover .bg-right {
+    background: transparent;
+    border-right: 2px solid white;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+/* Красный и чёрный градиент только при наведении */
+.block-cube.block-cube-hover:hover .bg-top {
+    background: linear-gradient(
+        90deg,
+        #020202 0%,
+        #cc0101 100%
+    ); /* Чёрный в красный */
+}
+
+.block-cube.block-cube-hover:hover .bg {
+    background: linear-gradient(
+        90deg,
+        #020202 0%,
+        #cc0101 100%
+    ); /* Чёрный в красный */
+}
+
+.block-cube.block-cube-hover:hover .bg-right {
+    background: #bb0000; /* Красный для боковой стенки */
+}
+
+.block-cube.block-cube-hover:hover .bg .bg-inner {
+    background: rgba(
+        255,
+        255,
+        255,
+        0.1
+    ); /* Лёгкая прозрачность при наведении */
+}

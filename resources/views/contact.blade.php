@@ -15,12 +15,25 @@
 
             <!-- Contact Form -->
             <div class="flex flex-col items-center">
-                <form class="form w-full max-w-lg space-y-6" autocomplete="off">
+                <!-- Show success or error messages -->
+                @if(session('success'))
+                    <div class="text-green-500 text-lg mb-4">
+                        {{ session('success') }}
+                    </div>
+                @elseif(session('error'))
+                    <div class="text-red-500 text-lg mb-4">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('contact.store') }}" method="POST" class="form w-full max-w-lg space-y-6"
+                    autocomplete="off">
+                    @csrf
                     <!-- Your Name -->
                     <div class="control block-cube block-input">
-                        <input type="text"
+                        <input type="text" name="name"
                             class="w-full bg-transparent border-0 px-3 py-3 text-white text-base placeholder-white focus:outline-none"
-                            placeholder="Your Name *" required>
+                            placeholder="Your Name *" value="{{ old('name') }}" required>
                         <div class="bg-top">
                             <div class="bg-inner"></div>
                         </div>
@@ -32,11 +45,11 @@
                         </div>
                     </div>
 
-                    <!-- Phone Number -->
+                    <!-- Phone Number (Only digits) -->
                     <div class="control block-cube block-input">
-                        <input type="tel"
+                        <input type="tel" name="phone" pattern="\d*" maxlength="15"
                             class="w-full bg-transparent border-0 px-3 py-3 text-white text-base placeholder-white focus:outline-none"
-                            placeholder="Phone number">
+                            placeholder="Phone number" value="{{ old('phone') }}">
                         <div class="bg-top">
                             <div class="bg-inner"></div>
                         </div>
@@ -50,9 +63,9 @@
 
                     <!-- Subject -->
                     <div class="control block-cube block-input">
-                        <input type="text"
+                        <input type="text" name="subject"
                             class="w-full bg-transparent border-0 px-3 py-3 text-white text-base placeholder-white focus:outline-none"
-                            placeholder="Subject *" required>
+                            placeholder="Subject *" value="{{ old('subject') }}" required>
                         <div class="bg-top">
                             <div class="bg-inner"></div>
                         </div>
@@ -66,9 +79,9 @@
 
                     <!-- Email -->
                     <div class="control block-cube block-input">
-                        <input type="email"
+                        <input type="email" name="email"
                             class="w-full bg-transparent border-0 px-3 py-3 text-white text-base placeholder-white focus:outline-none"
-                            placeholder="Email *" required>
+                            placeholder="Email *" value="{{ old('email') }}" required>
                         <div class="bg-top">
                             <div class="bg-inner"></div>
                         </div>
@@ -82,9 +95,9 @@
 
                     <!-- Comment -->
                     <div class="control block-cube block-input">
-                        <textarea
+                        <textarea name="comment"
                             class="w-full bg-transparent border-0 px-3 py-3 text-white text-base placeholder-white focus:outline-none h-40 resize-none"
-                            placeholder="Comment"></textarea>
+                            placeholder="Comment">{{ old('comment') }}</textarea>
                         <div class="bg-top">
                             <div class="bg-inner"></div>
                         </div>

@@ -10,7 +10,7 @@
         <section class="max-w-full mx-auto bg-black text-white">
             <!-- Leaderboard Title -->
             <h1 class="text-5xl uppercase font-extrabold tracking-wider mb-12 font-sans text-center animate-fade-in">
-                Leaderboard Top 50
+                Leaderboard
             </h1>
 
             <!-- Leaderboard Entries -->

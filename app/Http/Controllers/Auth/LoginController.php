@@ -119,4 +119,31 @@ class LoginController extends Controller
         $intended = request()->input('intended') ?: session()->pull('url.intended', $this->redirectTo);
         return $intended;
     }
+
+    /**
+     * Переопределяем метод логаута, чтобы указать редирект на главную страницу.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/'); // Редирект на главную страницу после выхода
+    }
+
+    /**
+     * Переопределяем метод отображения формы логина.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function showLoginForm()
+    {
+        return redirect('/');
+    }
 }

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Freshie - @yield('title')</title>
 
     <!-- Tailwind CSS -->
@@ -38,7 +39,7 @@
 
 <body class="bg-black text-white font-sans">
     <!-- Header -->
-    <header class="w-full bg-black/90 py-4 min-h-[140px] z-[900] overflow-visible relative">
+    <header class="w-full bg-black/90 py-4 min-h-[94px] z-[900] overflow-visible relative">
         <div class="max-w-6xl mx-auto px-4 sm:px-5 flex items-center justify-between animate-fade-in">
             <!-- Mobile: Burger Menu on Left -->
             <div class="md:hidden flex items-center absolute top-16 md:static">
@@ -52,7 +53,7 @@
                 class="flex-shrink-0 md:order-1 order-2 absolute left-1/2 top-1 transform -translate-x-1/2 md:static md:transform-none">
                 <a href="{{ url('/') }}">
                     <div id="logo-container"
-                        class="h-40 sm:h-44 md:h-60 w-36 sm:w-40 md:w-48 min-h-[10rem] min-w-[9rem]"
+                        class="h-28 sm:h-32 md:h-40 w-36 sm:w-40 md:w-48 min-h-[6.5rem] min-w-[9rem]"
                         style="cursor: grab; touch-action: manipulation;"></div>
                 </a>
             </div>
@@ -67,11 +68,14 @@
                         <i class="fas fa-user"></i>
                     </button>
                 </div>
-                <!-- Cart Icon -->
+                <!-- Cart Icon with Count Badge -->
                 <div class="relative">
                     <button id="cart-toggle"
                         class="text-white text-2xl sm:text-3xl hover:text-gray-400 hover:scale-105">
                         <i class="fas fa-shopping-cart"></i>
+                        <div id="cart-count"
+                            class="absolute -top-2 -right-2 w-5 h-5 bg-white text-black text-xs rounded-full flex items-center justify-center font-bold hidden">
+                        </div>
                     </button>
                 </div>
             </div>
@@ -139,12 +143,20 @@
                 <div class="w-full md:w-1/3 mb-5 md:mb-0">
                     <h4 class="text-base sm:text-lg uppercase font-bold tracking-wider mb-4">Subscribe to our emails
                     </h4>
-                    <div class="flex items-center border-b border-white">
-                        <input type="email" placeholder="Enter your email"
-                            class="bg-transparent text-white text-xs sm:text-sm w-full outline-none py-2">
-                        <button class="text-white text-base sm:text-lg"><i class="fas fa-arrow-right"></i></button>
+                    <div class="relative">
+                        <p id="error-message"
+                            class="text-red-500 text-xs sm:text-sm uppercase font-bold tracking-wider mb-2 hidden">
+                            Please enter a valid email address</p>
+                        <div class="flex items-center border-b border-white" id="subscribe-container">
+                            <input type="email" placeholder="Enter your email"
+                                class="bg-transparent text-white text-xs sm:text-sm w-full outline-none py-2"
+                                id="email-input">
+                            <button class="text-white text-base sm:text-lg" id="subscribe-button"><i
+                                    class="fas fa-arrow-right"></i></button>
+                        </div>
                     </div>
                 </div>
+
                 <div class="flex space-x-3 sm:space-x-4">
                     <a href="https://www.instagram.com/freshie.exe/"
                         class="text-white text-base sm:text-lg hover:text-gray-400"><i class="fab fa-instagram"></i></a>
@@ -165,16 +177,22 @@
                     <div class="relative">
                         <button id="region-toggle"
                             class="w-full bg-black border border-white rounded px-3 py-2 text-xs sm:text-sm flex justify-between items-center uppercase font-bold tracking-wider">
-                            South Korea (USD $) <i class="fas fa-chevron-down"></i>
+                            Europe (EUR €) <i class="fas fa-chevron-down"></i>
                         </button>
                         <div id="region-dropdown"
                             class="absolute top-full left-0 w-full min-w-[200px] bg-black border border-white rounded mt-1 hidden z-10">
                             <div class="px-3 py-2 text-xs sm:text-sm uppercase font-bold tracking-wider hover:bg-gray-800 cursor-pointer"
-                                data-value="South Korea (USD $)">South Korea (USD $)</div>
+                                data-value="Europe (EUR €)">Europe (EUR €)</div>
                             <div class="px-3 py-2 text-xs sm:text-sm uppercase font-bold tracking-wider hover:bg-gray-800 cursor-pointer"
-                                data-value="Spain (USD $)">Spain (USD $)</div>
+                                data-value="North America (USD $)">North America (USD $)</div>
                             <div class="px-3 py-2 text-xs sm:text-sm uppercase font-bold tracking-wider hover:bg-gray-800 cursor-pointer"
-                                data-value="Sweden (EUR €)">Sweden (EUR €)</div>
+                                data-value="Asia (USD $)">Asia (USD $)</div>
+                            <div class="px-3 py-2 text-xs sm:text-sm uppercase font-bold tracking-wider hover:bg-gray-800 cursor-pointer"
+                                data-value="South America (USD $)">South America (USD $)</div>
+                            <div class="px-3 py-2 text-xs sm:text-sm uppercase font-bold tracking-wider hover:bg-gray-800 cursor-pointer"
+                                data-value="Africa (USD $)">Africa (USD $)</div>
+                            <div class="px-3 py-2 text-xs sm:text-sm uppercase font-bold tracking-wider hover:bg-gray-800 cursor-pointer"
+                                data-value="Australia (AUD $)">Australia (AUD $)</div>
                         </div>
                     </div>
                 </div>
@@ -213,17 +231,28 @@
             @if (Auth::check())
                 <!-- Профиль для авторизованного пользователя -->
                 <div>
-                    <h3 class="text-2xl font-extrabold uppercase tracking-widest text-white mb-5">Profile</h3>
-                    <p class="text-sm text-gray-300 mb-3">Welcome, {{ Auth::user()->username ?? 'Guest' }}</p>
+                    <h3 class="text-2xl font-extrabold uppercase tracking-widest text-white mb-5">Welcome,
+                        {{ Auth::user()->username ?? 'Guest' }}
+                    </h3>
+
+                    <!-- Кнопка-ссылка на профиль пользователя -->
+                    <a href="{{ route('profile.show') }}"
+                        class="block no-underline text-center w-full bg-black text-white text-sm font-bold uppercase tracking-wider py-2 rounded-lg border-2 border-white hover:bg-gray-800 transition-all duration-300">
+                        My Profile
+                    </a>
+
+                    <!-- Кнопка выхода из аккаунта -->
                     <button
-                        class="w-full bg-black text-white text-sm font-bold uppercase tracking-wider py-2 rounded-lg border-2 border-white hover:bg-gray-800 transition-all duration-300"
+                        class="mt-3 w-full bg-black text-white text-sm font-bold uppercase tracking-wider py-2 rounded-lg border-2 border-white hover:bg-gray-800 transition-all duration-300"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         Logout
                     </button>
+
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf
                     </form>
                 </div>
+
             @else
                 <!-- Форма входа для неавторизованного пользователя -->
                 <h3 class="text-2xl font-extrabold uppercase tracking-widest text-white mb-5">Sign In</h3>
@@ -278,7 +307,22 @@
         class="w-80 bg-black rounded-xl shadow-[20px_20px_40px_rgba(255,255,255,0.3),-20px_-20px_40px_rgba(0,0,0,0.5)] opacity-0 invisible transition-all duration-300 z-[10000] fixed top-[80px] right-[60px]">
         <div class="p-5">
             <h3 class="text-2xl font-extrabold uppercase tracking-widest text-white mb-5">Cart</h3>
-            <p class="text-sm text-gray-300 mb-3">Your cart is empty</p>
+
+            <!-- Loading spinner -->
+            <div id="cart-loading" class="flex justify-center items-center py-4 hidden">
+                <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+            </div>
+
+            <div id="cart-items" class="space-y-4 max-h-96 overflow-y-auto mobile-scrollbar">
+                <!-- Динамическое содержимое корзины -->
+            </div>
+            <div id="cart-total" class="mt-4 text-sm text-gray-300">
+                <!-- Общая сумма -->
+            </div>
+            <a href="{{ url('/checkout') }}" id="checkout-button"
+                class="mt-4 w-full bg-black text-white text-sm font-bold uppercase tracking-wider py-2 rounded-lg border-2 border-white hover:bg-gray-800 transition-all duration-300 text-center block hidden">
+                Checkout
+            </a>
         </div>
     </div>
 
@@ -451,30 +495,6 @@
                 }
             });
 
-            // Выпадающий список регионов
-            const toggleButton = document.getElementById('region-toggle');
-            const dropdown = document.getElementById('region-dropdown');
-            const options = dropdown ? dropdown.querySelectorAll('div[data-value]') : [];
-
-            if (toggleButton && dropdown) {
-                toggleButton.addEventListener('click', function () {
-                    dropdown.classList.toggle('hidden');
-                });
-
-                options.forEach(option => {
-                    option.addEventListener('click', function () {
-                        toggleButton.childNodes[0].textContent = this.getAttribute('data-value');
-                        dropdown.classList.add('hidden');
-                    });
-                });
-
-                document.addEventListener('click', function (e) {
-                    if (!toggleButton.contains(e.target) && !dropdown.contains(e.target)) {
-                        dropdown.classList.add('hidden');
-                    }
-                });
-            }
-
             // Управление выпадающим меню профиля
             const profileButton = document.getElementById('profile-toggle');
             const profileDropdown = document.getElementById('profile-dropdown');
@@ -515,16 +535,173 @@
                 }
             }
 
+            // Выпадающий список регионов
+            const toggleButton = document.getElementById('region-toggle');
+            const dropdown = document.getElementById('region-dropdown');
+            const options = dropdown ? dropdown.querySelectorAll('div[data-value]') : [];
+
+            if (toggleButton && dropdown) {
+                toggleButton.addEventListener('click', function () {
+                    dropdown.classList.toggle('hidden');
+                });
+
+                options.forEach(option => {
+                    option.addEventListener('click', function () {
+                        toggleButton.childNodes[0].textContent = this.getAttribute('data-value');
+                        dropdown.classList.add('hidden');
+                    });
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!toggleButton.contains(e.target) && !dropdown.contains(e.target)) {
+                        dropdown.classList.add('hidden');
+                    }
+                });
+            }
+
             // Управление выпадающим меню корзины
             const cartButton = document.getElementById('cart-toggle');
             const cartDropdown = document.getElementById('cart-dropdown');
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalContainer = document.getElementById('cart-total');
+            const checkoutButton = document.getElementById('checkout-button');
+            const cartCountBadge = document.getElementById('cart-count');
+            const cartLoading = document.getElementById('cart-loading');
 
+            // Функция обновления бейджа
+            function updateCartBadge() {
+                fetch('/cart/get', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.items) {
+                            const itemCount = data.items.reduce((total, item) => total + item.quantity, 0);
+                            cartCountBadge.textContent = itemCount;
+                            if (itemCount > 0) {
+                                cartCountBadge.classList.remove('hidden');
+                            } else {
+                                cartCountBadge.classList.add('hidden');
+                            }
+                        } else {
+                            cartCountBadge.textContent = '0';
+                            cartCountBadge.classList.add('hidden');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching cart count:', error);
+                        cartCountBadge.textContent = '0';
+                        cartCountBadge.classList.add('hidden');
+                    });
+            }
+
+            function showCartLoading() {
+                cartLoading.classList.remove('hidden');
+                cartItemsContainer.classList.add('hidden');
+            }
+
+            function hideCartLoading() {
+                cartLoading.classList.add('hidden');
+                cartItemsContainer.classList.remove('hidden');
+            }
+
+            // Функция полного обновления корзины (при клике)
+            function updateCart() {
+                showCartLoading();
+
+                fetch('/cart/get', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        hideCartLoading();
+
+                        if (data.success) {
+                            cartItemsContainer.innerHTML = '';
+
+                            // Update cart count badge
+                            const itemCount = data.items.reduce((total, item) => total + item.quantity, 0);
+                            cartCountBadge.textContent = itemCount;
+                            if (itemCount > 0) {
+                                cartCountBadge.classList.remove('hidden');
+                            } else {
+                                cartCountBadge.classList.add('hidden');
+                            }
+
+                            if (itemCount === 0) {
+                                cartItemsContainer.innerHTML = '<p class="text-sm text-gray-300 mb-3">Your cart is empty</p>';
+                                checkoutButton.classList.add('hidden');
+                            } else {
+                                data.items.forEach(item => {
+                                    const price = typeof item.price === 'number' ? item.price : 0;
+                                    const discount = typeof item.discount === 'number' ? item.discount : 0;
+                                    const discountedPrice = discount > 0 ? price * (1 - discount / 100) : price;
+                                    const formattedPrice = price.toFixed(2);
+                                    const formattedDiscountedPrice = discountedPrice.toFixed(2);
+
+                                    const itemElement = document.createElement('div');
+                                    itemElement.classList.add('flex', 'items-center', 'gap-3', 'border-b', 'border-gray-700', 'pb-3');
+                                    itemElement.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" class="w-12 h-12 object-cover rounded">
+                        <div class="flex-1">
+                            <p class="text-sm font-bold text-white">${item.name}</p>
+                            <p class="text-xs text-gray-400">Size: ${item.size}</p>
+                            <div class="flex items-center gap-1 mt-1">
+                                ${discount > 0 ? `<span class="line-through text-gray-400 text-xs">$${formattedPrice}</span>` : ''}
+                                <span class="text-sm font-bold">$${formattedDiscountedPrice}</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-1">
+                                <button class="decrease-quantity text-gray-400 hover:text-white" data-cart-item-id="${item.id}">-</button>
+                                <span class="text-sm">${item.quantity}</span>
+                                <button class="increase-quantity text-gray-400 hover:text-white" data-cart-item-id="${item.id}">+</button>
+                            </div>
+                        </div>
+                        <button class="remove-item text-gray-400 hover:text-red-500" data-cart-item-id="${item.id}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                                    cartItemsContainer.appendChild(itemElement);
+                                });
+                                checkoutButton.classList.remove('hidden');
+                            }
+
+                            const total = typeof data.total === 'number' ? data.total.toFixed(2) : '0.00';
+                            cartTotalContainer.innerHTML = `<p class="font-bold">Total: $${total}</p>`;
+                        } else {
+                            cartItemsContainer.innerHTML = '<p class="text-sm text-gray-300 mb-3">Your cart is empty</p>';
+                            checkoutButton.classList.add('hidden');
+                            cartCountBadge.textContent = '0';
+                            cartCountBadge.classList.add('hidden');
+                        }
+                    })
+                    .catch(error => {
+                        hideCartLoading();
+                        console.error('Error fetching cart:', error);
+                        cartItemsContainer.innerHTML = '<p class="text-sm text-gray-300 mb-3">Error loading cart</p>';
+                        cartCountBadge.textContent = '0';
+                        cartCountBadge.classList.add('hidden');
+                    });
+            }
+
+            // Инициализация при загрузке страницы
+            updateCartBadge(); // Обновляем бейдж сразу при загрузке
+
+            // Открытие корзины при клике
             if (cartButton && cartDropdown) {
                 cartButton.addEventListener('click', function (e) {
                     e.preventDefault();
                     cartDropdown.classList.toggle('opacity-100');
                     cartDropdown.classList.toggle('visible');
                     cartDropdown.classList.toggle('invisible');
+                    updateCart(); // Полное обновление корзины при клике
                 });
 
                 document.addEventListener('click', function (e) {
@@ -535,6 +712,75 @@
                     }
                 });
             }
+
+            // Обработчики для кнопок изменения количества и удаления
+            cartItemsContainer.addEventListener('click', function (e) {
+                if (e.target.classList.contains('increase-quantity') || e.target.classList.contains('decrease-quantity')) {
+                    showCartLoading();
+
+                    const cartItemId = e.target.getAttribute('data-cart-item-id');
+                    const isIncrease = e.target.classList.contains('increase-quantity');
+                    const quantitySpan = e.target.parentElement.querySelector('span');
+                    let quantity = parseInt(quantitySpan.textContent);
+
+                    quantity = isIncrease ? quantity + 1 : quantity - 1;
+
+                    fetch('/cart/update', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            cart_item_id: cartItemId,
+                            quantity: quantity
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                updateCart(); // Обновляем корзину
+                                updateCartBadge(); // Обновляем бейдж
+                            } else {
+                                hideCartLoading();
+                            }
+                        })
+                        .catch(error => {
+                            hideCartLoading();
+                            console.error('Error updating quantity:', error);
+                        });
+                }
+
+                if (e.target.classList.contains('remove-item') || e.target.parentElement.classList.contains('remove-item')) {
+                    showCartLoading();
+
+                    const cartItemId = e.target.getAttribute('data-cart-item-id') || e.target.parentElement.getAttribute('data-cart-item-id');
+
+                    fetch('/cart/remove', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            cart_item_id: cartItemId
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                updateCart(); // Обновляем корзину
+                                updateCartBadge(); // Обновляем бейдж
+                            } else {
+                                hideCartLoading();
+                            }
+                        })
+                        .catch(error => {
+                            hideCartLoading();
+                            console.error('Error removing item:', error);
+                        });
+                }
+            });
 
             // Переключение видимости пароля
             const passwordToggle = document.querySelector('.toggle-password');
@@ -595,6 +841,30 @@
                     }
                 }
                 lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+            });
+
+            // Делаем updateCartBadge доступной глобально, чтобы её можно было вызвать из других скриптов
+            window.updateCartBadge = updateCartBadge;
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const subscribeButton = document.getElementById('subscribe-button');
+            const emailInput = document.getElementById('email-input');
+            const subscribeContainer = document.getElementById('subscribe-container');
+            const errorMessage = document.getElementById('error-message');
+
+            subscribeButton.addEventListener('click', function () {
+                const email = emailInput.value.trim();
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (emailPattern.test(email)) {
+                    // Если email валиден, показываем "Спасибо"
+                    subscribeContainer.innerHTML = '<p class="text-white text-xs sm:text-sm w-full py-2">Thank you for subscribing!</p>';
+                    errorMessage.classList.add('hidden'); // Скрываем сообщение об ошибке
+                } else {
+                    // Если email невалиден, показываем уведомление
+                    errorMessage.classList.remove('hidden');
+                }
             });
         });
     </script>

@@ -54,13 +54,13 @@ class LeaderboardController extends Controller
 
     public function leaderboard()
     {
-        // Получаем топ-50 записей из таблицы лидеров с сортировкой по убыванию очков
+        // Получаем все записи из таблицы лидеров с сортировкой по убыванию очков
         $leaderboard = Leaderboard::with('user')
             ->orderBy('score', 'desc')
-            ->take(50)
             ->get();
 
         // Передаем данные в представление
         return view('games.leaderboard', compact('leaderboard'));
     }
+
 }

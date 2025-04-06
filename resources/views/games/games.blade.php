@@ -21,41 +21,17 @@
                 <!-- Shooting Games Category -->
                 <div class="mb-12">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <a href="{{ url('/gogo-game') }}" class="game-item relative">
+                        <a href="{{ url('/games/gogo-game') }}" class="game-item relative">
                             <img src="{{ asset('img/game-1.png') }}" alt="GoGo Game"
                                 class="w-full h-auto rounded-lg game-image">
                             <video class="game-video w-full h-auto rounded-lg" muted loop preload="metadata">
                                 <source src="{{ asset('video/game-1.mp4') }}" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
-                            <p class="text-center text-white mt-2">GoGo Game</p>
+                            <p class="text-center text-white mt-2">Freshie Go</p>
                         </a>
 
-                        <a href="{{ url('/blockstack-game') }}" class="game-item relative">
-                            <img src="{{ asset('img/game-2.png') }}" alt="Coloron Game"
-                                class="w-full h-auto rounded-lg game-image">
-                            <video class="game-video w-full h-auto rounded-lg" muted loop preload="metadata">
-                                <source src="{{ asset('video/game-2.mp4') }}" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <p class="text-center text-white mt-2">BlockStack</p>
-                        </a>
-                    </div>
-                </div>
-
-
-                <div class="mb-12">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <a href="{{ url('/bendy-game') }}" class="game-item relative">
-                            <img src="{{ asset('img/game-4.png') }}" alt="Bendy" class="w-full h-auto rounded-lg game-image">
-                            <video class="game-video w-full h-auto rounded-lg" muted loop preload="metadata">
-                                <source src="{{ asset('video/game-4.mp4') }}" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <p class="text-center text-white mt-2">Bendy</p>
-                        </a>
-
-                        <a href="#" class="game-item relative">
+                        <a class="game-item relative">
                             <img src="{{ asset('img/meme.jpg') }}" alt="To be continued"
                                 class="w-full h-auto rounded-lg game-image">
                             <video class="game-video w-full h-auto rounded-lg" muted loop preload="metadata">
@@ -191,6 +167,6 @@
                         profileButton.click(); // Simulate a click to open the profile dropdown
                     }
                 @endif
-                                                                                                                });
+                                                                                                                                            });
     </script>
 @endsection

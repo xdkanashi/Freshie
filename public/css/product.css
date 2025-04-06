@@ -1,0 +1,369 @@
+/* Animation for product image */
+.image-slide-up {
+    animation: slideUp 1s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pulsing animation for green dot */
+.pulse-dot {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+    }
+
+    70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+    }
+
+    100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
+
+/* 3D Cube Effect (used for other elements, not notification) */
+.block-cube {
+    position: relative;
+}
+
+.block-cube .bg-top {
+    position: absolute;
+    height: 10px;
+    background: transparent;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+    bottom: 100%;
+    left: 5px;
+    right: -5px;
+    transform: skew(-45deg, 0);
+    margin: 0;
+    transition: all 0.2s ease-in-out;
+}
+
+.block-cube .bg-top .bg-inner {
+    bottom: 0;
+}
+
+.block-cube .bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    border: 2px solid white;
+    transition: all 0.2s ease-in-out;
+}
+
+.block-cube .bg-right {
+    position: absolute;
+    background: transparent;
+    border-right: 2px solid white;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    top: -5px;
+    z-index: 0;
+    bottom: 5px;
+    width: 10px;
+    left: 100%;
+    transform: skew(0, -45deg);
+    transition: all 0.2s ease-in-out;
+}
+
+.block-cube .bg-right .bg-inner {
+    left: 0;
+}
+
+.block-cube .bg .bg-inner {
+    transition: all 0.2s ease-in-out;
+}
+
+.block-cube .bg-inner {
+    background: transparent;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+}
+
+.block-cube .text {
+    position: relative;
+    z-index: 2;
+}
+
+.block-cube.block-input input,
+.block-cube.block-input textarea {
+    position: relative;
+    z-index: 2;
+    background: transparent;
+}
+
+.block-cube.block-input input:focus ~ .bg-top,
+.block-cube.block-input input:focus ~ .bg-right,
+.block-cube.block-input input:focus ~ .bg {
+    background: rgba(255, 0, 0, 0.3);
+    border-color: rgba(255, 0, 0, 0.7);
+}
+
+.block-cube.block-cube-hover .bg-top {
+    background: transparent;
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+}
+
+.block-cube.block-cube-hover .bg {
+    background: transparent;
+    border: 2px solid white;
+}
+
+.block-cube.block-cube-hover .bg-right {
+    background: transparent;
+    border-right: 2px solid white;
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.block-cube.block-cube-hover:hover .bg-top {
+    background: linear-gradient(90deg, #020202 0%, #cc0101 100%);
+}
+
+.block-cube.block-cube-hover:hover .bg {
+    background: linear-gradient(90deg, #020202 0%, #cc0101 100%);
+}
+
+.block-cube.block-cube-hover:hover .bg-right {
+    background: #bb0000;
+}
+
+.block-cube.block-cube-hover:hover .bg .bg-inner {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Size chart modal */
+.size-chart-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.size-chart-modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+.size-chart-container {
+    background-color: #000;
+    border: 1px solid #333;
+    padding: 20px;
+    max-width: 600px;
+    width: 90%;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.size-chart-modal.active .size-chart-container {
+    transform: translateY(0);
+}
+
+/* Description toggles with faster transition */
+.description-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out, opacity 0.15s ease-out;
+    /* Faster closing */
+    opacity: 0;
+}
+
+.description-content.active {
+    max-height: 500px;
+    opacity: 1;
+    transition: max-height 0.4s ease-in, opacity 0.3s ease-in;
+    /* Smooth opening */
+}
+
+/* Stock indicator styling */
+.stock-indicator {
+    position: relative;
+    z-index: 2;
+    padding: 10px;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+/* Navigation buttons */
+.nav-button {
+    position: relative;
+    z-index: 2;
+    padding: 8px 16px;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: transparent;
+    border: none;
+}
+
+.nav-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Size option active state */
+.size-option {
+    position: relative;
+    z-index: 2;
+    transition: all 0.2s ease;
+    background: transparent;
+}
+
+.size-option:hover {
+    transform: translateY(-2px);
+}
+
+.size-option.active {
+    background-color: white;
+    color: black;
+    transform: translateY(-2px);
+}
+
+/* Photo Gallery */
+.gallery-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-modal.active {
+    display: flex;
+    opacity: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery-container {
+    position: relative;
+    max-width: 90%;
+    max-height: 80vh;
+    margin: 0 auto;
+    touch-action: pan-y;
+    /* Allow swipes only horizontally */
+}
+
+.gallery-image {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    user-select: none;
+    /* Prevent image selection */
+    -webkit-user-drag: none;
+    /* Prevent dragging on iOS */
+}
+
+.gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.5);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.gallery-nav:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.gallery-prev {
+    left: -50px;
+}
+
+.gallery-next {
+    right: -50px;
+}
+
+.gallery-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.gallery-counter {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 0.9rem;
+}
+
+.zoom-controls {
+    position: absolute;
+    bottom: -30px;
+    right: 0;
+    display: flex;
+    gap: 10px;
+}
+
+.zoom-button {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.zoom-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}

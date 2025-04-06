@@ -12,9 +12,14 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('username', 50);
+            $table->string('username', 50)->unique();
             $table->string('email', 50)->unique();
             $table->string('password');
+            $table->boolean('is_admin')->default(false); // Флаг администратора
+            $table->boolean('game_limit_enabled')->default(true); // Переключатель для админа
+            $table->timestamp('last_game_played_at')->nullable(); // Время последней игры
+            $table->timestamp('next_game_time')->nullable();
+            $table->integer('game_interval_hours')->default(24);
             $table->rememberToken();
             $table->timestamps();
         });

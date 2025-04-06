@@ -191,3 +191,107 @@ h2 {
         text-shadow: -180px 0 0 var(--clr), 180px 0 var(--clr);
     }
 }
+
+.notification {
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+    animation: slideUp 0.3s ease-out forwards,
+        fadeOut 0.5s ease-in 4.5s forwards;
+    position: relative;
+    overflow: hidden;
+}
+
+.notification::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    animation: timeBar 5s linear forwards;
+}
+
+.notification-success {
+    background-color: #10b981;
+    color: white;
+}
+
+.notification-success::after {
+    background-color: #059669;
+}
+
+.notification-error {
+    background-color: #ef4444;
+    color: white;
+}
+
+.notification-error::after {
+    background-color: #dc2626;
+}
+
+.notification-info {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.notification-info::after {
+    background-color: #2563eb;
+}
+
+.notification-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.notification-message {
+    font-size: 0.9rem;
+}
+
+.notification-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+/* Changed animation for bottom position */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes timeBar {
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
+}

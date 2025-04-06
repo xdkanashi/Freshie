@@ -25,6 +25,34 @@ var sketchProc = function (processingInstance) {
         keyReleased = function () {
             keys[keyCode] = false;
         };
+        mouseReleased = function () {
+            pressed = false;
+        };
+
+        // Add touch event handlers for mobile support
+        touchStart = function () {
+            // When a touch starts, treat it as a "press"
+            pressed = true;
+            // Update mouseX and mouseY to the first touch point
+            if (touchPoints.length > 0) {
+                mouseX = touchPoints[0].x;
+                mouseY = touchPoints[0].y;
+            }
+        };
+
+        touchEnd = function () {
+            // When a touch ends, treat it as a "click" and release the press
+            clicked = true;
+            pressed = false;
+        };
+
+        touchMove = function () {
+            // Update mouseX and mouseY as the touch moves
+            if (touchPoints.length > 0) {
+                mouseX = touchPoints[0].x;
+                mouseY = touchPoints[0].y;
+            }
+        };
 
         // Function to save score to Laravel backend
         var saveScoreToLeaderboard = function (score) {
@@ -324,8 +352,8 @@ var sketchProc = function (processingInstance) {
                 this.py = 400;
                 this.w = 40;
                 this.h = 40;
-                this.color = color(227, 211, 134);
-                this.state = 0; //0 = normal, 1 = lava
+                this.color = color(227, 211, 134); // Этот цвет больше не используется, так как мы задаём красный напрямую
+                this.state = 0; // 0 = normal, 1 = lava
                 this.mouth = {
                     value: 0,
                     max: 3,
@@ -343,189 +371,403 @@ var sketchProc = function (processingInstance) {
             };
             Player.prototype = {
                 draw: function () {
+                    // Устанавливаем цвет котика в зависимости от состояния
+                    let bodyColor;
                     switch (this.state) {
-                        case 1: //hit lava state
-                            fill(50);
+                        case 1: // hit lava state
+                            bodyColor = color(50); // Серый цвет, когда котик в лаве
                             break;
                         default:
-                            fill(this.color);
+                            bodyColor = color(255, 0, 0); // Красный цвет котика (как в лого)
+                            break;
                     }
+
                     pushStyle();
-                    noStroke();
-                    strokeWeight(1);
-                    stroke(250, 200);
-                    noStroke();
-                    //tenticles
-                    ellipse(
-                        this.x + this.w * 0.25,
-                        this.y + this.h * 0.9,
-                        this.w * 0.25,
-                        this.h * 0.5
+
+                    // Хвостик котика (красный, закрученный, с черной обводкой) - рисуем ПЕРВЫМ
+                    // Сначала черная обводка (более толстая)
+                    stroke(0); // Черный цвет для обводки
+                    strokeWeight(7); // Толщина обводки (унифицированная)
+                    noFill();
+                    beginShape();
+                    vertex(this.x + this.w, this.y + this.h * 0.8); // Начало хвостика (справа от котика)
+                    bezierVertex(
+                        this.x + this.w * 1.2,
+                        this.y + this.h * 0.6, // Первая контрольная точка
+                        this.x + this.w * 1.4,
+                        this.y + this.h * 0.4, // Вторая контрольная точка
+                        this.x + this.w * 1.3,
+                        this.y + this.h * 0.2 // Конец хвостика (закрученный)
                     );
-                    ellipse(
+                    endShape();
+
+                    // Теперь красный хвостик поверх черной обводки
+                    stroke(255, 0, 0); // Красный цвет для хвостика
+                    strokeWeight(5); // Толщина самого хвостика
+                    beginShape();
+                    vertex(this.x + this.w, this.y + this.h * 0.8); // Начало хвостика (справа от котика)
+                    bezierVertex(
+                        this.x + this.w * 1.2,
+                        this.y + this.h * 0.6, // Первая контрольная точка
+                        this.x + this.w * 1.4,
+                        this.y + this.h * 0.4, // Вторая контрольная точка
+                        this.x + this.w * 1.3,
+                        this.y + this.h * 0.2 // Конец хвостика (закрученный)
+                    );
+                    endShape();
+
+                    // Уши котика (внешние треугольники) - рисуем ВТОРЫМИ
+                    fill(bodyColor); // Явно задаем цвет ушей, чтобы он совпадал с телом
+                    stroke(0); // Черный цвет обводки
+                    strokeWeight(1); // Унифицированная толщина обводки
+                    triangle(
+                        this.x + this.w * 0.1,
+                        this.y + this.h * 0.1, // Левое ухо: нижняя левая точка
                         this.x + this.w * 0.5,
-                        this.y + this.h * 0.9,
-                        this.w * 0.25,
-                        this.h * 0.5
+                        this.y + this.h * 0.1, // Левое ухо: нижняя правая точка
+                        this.x + this.w * 0.3,
+                        this.y - this.h * 0.6 // Левое ухо: верхняя точка
                     );
-                    ellipse(
-                        this.x + this.w * 0.75,
-                        this.y + this.h * 0.9,
-                        this.w * 0.25,
-                        this.h * 0.5
+                    triangle(
+                        this.x + this.w * 0.5,
+                        this.y + this.h * 0.1, // Правое ухо: нижняя левая точка
+                        this.x + this.w * 0.9,
+                        this.y + this.h * 0.1, // Правое ухо: нижняя правая точка
+                        this.x + this.w * 0.7,
+                        this.y - this.h * 0.6 // Правое ухо: верхняя точка
                     );
 
-                    //body
-                    strokeWeight(1);
-                    stroke(250, 200);
-                    rect(this.x, this.y, this.w, this.h, 8, 8, 5, 5);
+                    // Внутренние треугольники ушей (светло-красные)
+                    fill(255, 100, 100); // Светло-красный цвет для внутренней части ушей
+                    noStroke(); // Отключаем обводку для внутренних треугольников
+                    triangle(
+                        this.x + this.w * 0.15,
+                        this.y + this.h * 0.05, // Левое ухо: нижняя левая точка (чуть меньше)
+                        this.x + this.w * 0.45,
+                        this.y + this.h * 0.05, // Левое ухо: нижняя правая точка
+                        this.x + this.w * 0.3,
+                        this.y - this.h * 0.45 // Левое ухо: верхняя точка (чуть ниже)
+                    );
+                    triangle(
+                        this.x + this.w * 0.55,
+                        this.y + this.h * 0.05, // Правое ухо: нижняя левая точка
+                        this.x + this.w * 0.85,
+                        this.y + this.h * 0.05, // Правое ухо: нижняя правая точка
+                        this.x + this.w * 0.7,
+                        this.y - this.h * 0.45 // Правое ухо: верхняя точка
+                    );
 
-                    //eyes
+                    // Голова котика (мягкий квадрат) - рисуем ПОСЛЕ ушей и хвоста
+                    fill(bodyColor); // Устанавливаем цвет для головы
+                    stroke(0); // Черный цвет обводки
+                    strokeWeight(1); // Унифицированная толщина обводки
+                    rect(
+                        this.x,
+                        this.y,
+                        this.w,
+                        this.h,
+                        10 // Радиус скругления углов для мягкого квадрата
+                    );
+
+                    // Отключаем обводку для глаз и других элементов
+                    noStroke();
+
+                    // Глаза - только белый и черный
                     switch (this.eyes.value) {
-                        case 0:
-                            noStroke();
+                        case 0: // Открытые глаза
+                            // Белки глаз (чисто белые)
+                            fill(255); // Белый цвет для белков
+                            ellipse(
+                                this.x + this.w * 0.35,
+                                this.y + this.h * 0.35,
+                                this.w * 0.28,
+                                this.h * 0.42
+                            );
+                            ellipse(
+                                this.x + this.w * 0.65,
+                                this.y + this.h * 0.35,
+                                this.w * 0.28,
+                                this.h * 0.42
+                            );
+
+                            // Черные зрачки
+                            fill(0); // Черный цвет для зрачков
+                            ellipse(
+                                this.x + this.w * 0.35,
+                                this.y + this.h * 0.35,
+                                this.w * 0.15,
+                                this.h * 0.25
+                            );
+                            ellipse(
+                                this.x + this.w * 0.65,
+                                this.y + this.h * 0.35,
+                                this.w * 0.15,
+                                this.h * 0.25
+                            );
+                            break;
+                        case 1: // Полузакрытые глаза
+                            // Белые белки
                             fill(255);
                             ellipse(
-                                this.x + this.w * 0.3,
-                                this.y + this.h * 0.35,
-                                this.w * 0.35,
-                                this.w * 0.35
+                                this.x + this.w * 0.35,
+                                this.y + this.h * 0.41,
+                                this.w * 0.25,
+                                this.h * 0.3
                             );
                             ellipse(
-                                this.x + this.w * 0.7,
-                                this.y + this.h * 0.35,
-                                this.w * 0.35,
-                                this.w * 0.35
+                                this.x + this.w * 0.65,
+                                this.y + this.h * 0.41,
+                                this.w * 0.25,
+                                this.h * 0.3
                             );
-                            fill(40);
-                            ellipse(
-                                this.x + this.w * 0.31,
-                                this.y + this.h * 0.34,
-                                this.w * 0.17,
-                                this.w * 0.19
-                            );
-                            ellipse(
-                                this.x + this.w * 0.69,
-                                this.y + this.h * 0.34,
-                                this.w * 0.17,
-                                this.w * 0.19
-                            );
-                            break;
-                        case 1:
+                            // Полузакрытый эффект
                             noFill();
-                            stroke(50, 200);
+                            stroke(0);
                             strokeWeight(3);
                             arc(
-                                this.x + this.w * 0.3,
+                                this.x + this.w * 0.35,
                                 this.y + this.h * 0.41,
                                 this.w * 0.25,
-                                this.w * 0.3,
+                                this.h * 0.3,
                                 radians(180),
                                 radians(360)
                             );
                             arc(
-                                this.x + this.w * 0.7,
+                                this.x + this.w * 0.65,
                                 this.y + this.h * 0.41,
                                 this.w * 0.25,
-                                this.w * 0.3,
+                                this.h * 0.3,
                                 radians(180),
                                 radians(360)
                             );
                             break;
-                        case 2:
+                        case 2: // Закрытые глаза
+                            // Контур закрытых глаз
                             noFill();
-                            stroke(50, 200);
+                            stroke(0);
                             strokeWeight(4);
                             line(
-                                this.x + this.w * 0.33,
-                                this.y + this.h * 0.25,
-                                this.x + this.w * 0.33,
-                                this.y + this.h * 0.45
+                                this.x + this.w * 0.25,
+                                this.y + this.h * 0.35,
+                                this.x + this.w * 0.45,
+                                this.y + this.h * 0.35
                             );
                             line(
-                                this.x + this.w * 0.67,
-                                this.y + this.h * 0.25,
-                                this.x + this.w * 0.67,
-                                this.y + this.h * 0.45
+                                this.x + this.w * 0.55,
+                                this.y + this.h * 0.35,
+                                this.x + this.w * 0.75,
+                                this.y + this.h * 0.35
                             );
                             break;
-                        case 3:
-                            //dead eyes
+                        case 3: // Мёртвые глаза
+                            // Белые белки
+                            fill(255);
+                            ellipse(
+                                this.x + this.w * 0.35,
+                                this.y + this.h * 0.35,
+                                this.w * 0.28,
+                                this.h * 0.42
+                            );
+                            ellipse(
+                                this.x + this.w * 0.65,
+                                this.y + this.h * 0.35,
+                                this.w * 0.28,
+                                this.h * 0.42
+                            );
+
+                            // X-образные зрачки
                             noFill();
-                            stroke(50, 200);
-                            strokeWeight(2);
+                            stroke(0);
+                            strokeWeight(3);
                             line(
-                                this.x + this.w * 0.3,
-                                this.y + this.h * 0.27,
-                                this.x + this.w * 0.4,
-                                this.y + this.h * 0.43
+                                this.x + this.w * 0.28,
+                                this.y + this.h * 0.28,
+                                this.x + this.w * 0.42,
+                                this.y + this.h * 0.42
                             );
                             line(
-                                this.x + this.w * 0.4,
-                                this.y + this.h * 0.27,
-                                this.x + this.w * 0.3,
-                                this.y + this.h * 0.43
+                                this.x + this.w * 0.42,
+                                this.y + this.h * 0.28,
+                                this.x + this.w * 0.28,
+                                this.y + this.h * 0.42
                             );
                             line(
-                                this.x + this.w * 0.57,
-                                this.y + this.h * 0.27,
-                                this.x + this.w * 0.67,
-                                this.y + this.h * 0.43
+                                this.x + this.w * 0.58,
+                                this.y + this.h * 0.28,
+                                this.x + this.w * 0.72,
+                                this.y + this.h * 0.42
                             );
                             line(
-                                this.x + this.w * 0.67,
-                                this.y + this.h * 0.27,
-                                this.x + this.w * 0.57,
-                                this.y + this.h * 0.43
+                                this.x + this.w * 0.72,
+                                this.y + this.h * 0.28,
+                                this.x + this.w * 0.58,
+                                this.y + this.h * 0.42
                             );
                             break;
                     }
 
-                    //mouth
+                    // Носик котика (треугольный)
+                    fill(0); // Черный носик
+                    noStroke();
+                    triangle(
+                        this.x + this.w * 0.45,
+                        this.y + this.h * 0.55,
+                        this.x + this.w * 0.55,
+                        this.y + this.h * 0.55,
+                        this.x + this.w * 0.5,
+                        this.y + this.h * 0.6
+                    );
+
+                    // Ротик котика (две линии от носика)
+                    stroke(0);
+                    strokeWeight(2);
+                    // Линия от носика вниз
+                    line(
+                        this.x + this.w * 0.5,
+                        this.y + this.h * 0.6,
+                        this.x + this.w * 0.5,
+                        this.y + this.h * 0.65
+                    );
+
+                    // Рот (в зависимости от состояния)
                     switch (this.mouth.value) {
-                        case 0:
-                            strokeWeight(3);
-                            stroke(50, 200);
+                        case 0: // Прямая линия
+                            strokeWeight(2);
+                            stroke(0);
                             line(
-                                this.x + this.w * 0.35,
-                                this.y + this.h * 0.75,
-                                this.x + this.w * 0.65,
-                                this.y + this.h * 0.75
+                                this.x + this.w * 0.4,
+                                this.y + this.h * 0.7,
+                                this.x + this.w * 0.6,
+                                this.y + this.h * 0.7
                             );
                             break;
-                        case 1:
+                        case 1: // Круглый рот
                             noStroke();
-                            fill(50, 200);
+                            fill(0);
                             ellipse(
                                 this.x + this.w / 2,
-                                this.y + this.h * 0.75,
-                                this.w * 0.2,
-                                this.w * 0.2
+                                this.y + this.h * 0.7,
+                                this.w * 0.15,
+                                this.h * 0.15
                             );
                             break;
-                        case 2:
-                            noStroke();
-                            fill(50, 200);
+                        case 2: // Улыбка
+                            noFill();
+                            stroke(0);
+                            strokeWeight(2);
                             arc(
                                 this.x + this.w / 2,
-                                this.y + this.h * 0.7,
+                                this.y + this.h * 0.65,
                                 this.w * 0.3,
-                                this.w * 0.25,
+                                this.h * 0.2,
                                 0,
                                 radians(180)
                             );
                             break;
                     }
+
+                    // Усы котика (длиннее, красные с черной обводкой) - рисуем ПОСЛЕ головы
+                    // Левые усы (3 шт.)
+                    // Сначала черная обводка (более толстая)
+                    stroke(0); // Черный цвет для обводки
+                    strokeWeight(3.5); // Унифицированная толщина обводки (разница 2 пикселя)
+                    line(
+                        this.x + this.w * 0.3,
+                        this.y + this.h * 0.55,
+                        this.x - this.w * 0.3, // Удлиняем усы влево
+                        this.y + this.h * 0.5
+                    );
+                    line(
+                        this.x + this.w * 0.3,
+                        this.y + this.h * 0.6,
+                        this.x - this.w * 0.3,
+                        this.y + this.h * 0.6
+                    );
+                    line(
+                        this.x + this.w * 0.3,
+                        this.y + this.h * 0.65,
+                        this.x - this.w * 0.3,
+                        this.y + this.h * 0.7
+                    );
+
+                    // Теперь красные усы поверх черной обводки
+                    stroke(255, 0, 0); // Красный цвет для усов
+                    strokeWeight(1.5); // Толщина самих усов
+                    line(
+                        this.x + this.w * 0.3,
+                        this.y + this.h * 0.55,
+                        this.x - this.w * 0.3,
+                        this.y + this.h * 0.5
+                    );
+                    line(
+                        this.x + this.w * 0.3,
+                        this.y + this.h * 0.6,
+                        this.x - this.w * 0.3,
+                        this.y + this.h * 0.6
+                    );
+                    line(
+                        this.x + this.w * 0.3,
+                        this.y + this.h * 0.65,
+                        this.x - this.w * 0.3,
+                        this.y + this.h * 0.7
+                    );
+
+                    // Правые усы (3 шт.)
+                    // Сначала черная обводка
+                    stroke(0); // Черный цвет для обводки
+                    strokeWeight(3.5); // Унифицированная толщина обводки
+                    line(
+                        this.x + this.w * 0.7,
+                        this.y + this.h * 0.55,
+                        this.x + this.w * 1.3, // Удлиняем усы вправо
+                        this.y + this.h * 0.5
+                    );
+                    line(
+                        this.x + this.w * 0.7,
+                        this.y + this.h * 0.6,
+                        this.x + this.w * 1.3,
+                        this.y + this.h * 0.6
+                    );
+                    line(
+                        this.x + this.w * 0.7,
+                        this.y + this.h * 0.65,
+                        this.x + this.w * 1.3,
+                        this.y + this.h * 0.7
+                    );
+
+                    // Теперь красные усы поверх черной обводки
+                    stroke(255, 0, 0); // Красный цвет для усов
+                    strokeWeight(1.5); // Толщина самих усов
+                    line(
+                        this.x + this.w * 0.7,
+                        this.y + this.h * 0.55,
+                        this.x + this.w * 1.3,
+                        this.y + this.h * 0.5
+                    );
+                    line(
+                        this.x + this.w * 0.7,
+                        this.y + this.h * 0.6,
+                        this.x + this.w * 1.3,
+                        this.y + this.h * 0.6
+                    );
+                    line(
+                        this.x + this.w * 0.7,
+                        this.y + this.h * 0.65,
+                        this.x + this.w * 1.3,
+                        this.y + this.h * 0.7
+                    );
+
                     popStyle();
                 },
                 update: function () {
-                    //not implemented within the player prototype
+                    // not implemented within the player prototype
                 },
                 run: function () {
                     this.update();
                     this.draw();
                 },
             };
+
             return Player;
         })();
 
@@ -587,24 +829,24 @@ var sketchProc = function (processingInstance) {
                 this.theme = 0;
                 this.themes = [
                     {
-                        backColor: color(35, 205, 255),
-                        blockColor: [color(40, 120, 130), color(30, 110, 120)],
-                        stroke: color(20, 100, 110),
-                        playerColor: color(230, 141, 240),
+                        backColor: color(20, 20, 40), // Тёмный фон для ночного города
+                        blockColor: [color(60, 60, 80), color(50, 50, 70)], // Серые стены
+                        stroke: color(255, 0, 255, 150), // Неоновый magenta для контуров
+                        playerColor: color(255, 0, 0), // Красный котик
                         images: [],
                     },
                     {
-                        backColor: color(235, 95, 125),
-                        blockColor: [color(150, 50, 70), color(115, 50, 65)],
-                        stroke: color(105, 40, 55),
-                        playerColor: color(144, 222, 113),
+                        backColor: color(30, 30, 50),
+                        blockColor: [color(70, 70, 90), color(60, 60, 80)],
+                        stroke: color(0, 255, 255, 150), // Неоновый циан
+                        playerColor: color(255, 0, 0),
                         images: [],
                     },
                     {
-                        backColor: color(180, 210, 130),
-                        blockColor: [color(70, 120, 75), color(60, 90, 60)],
-                        stroke: color(50, 80, 50),
-                        playerColor: color(235, 225, 80),
+                        backColor: color(40, 40, 60),
+                        blockColor: [color(80, 80, 100), color(70, 70, 90)],
+                        stroke: color(255, 255, 0, 150), // Неоновый жёлтый
+                        playerColor: color(255, 0, 0),
                         images: [],
                     },
                 ];
@@ -630,7 +872,7 @@ var sketchProc = function (processingInstance) {
                         "https://www.kasandbox.org/programming-sounds/retro/laser2.mp3"
                     ),
                     star: this.addSound(
-                        "https://www.kasandbox.org/programming-sounds/rpg/metal-chime.mp3"
+                        "https://www.kasandbox.org/programming-sounds/retro/coin.mp3"
                     ),
                     birdCollect: this.addSound(
                         "https://assets.codepen.io/5126815/sound-game-start.mp3"
@@ -651,7 +893,7 @@ var sketchProc = function (processingInstance) {
                     y: 0,
                 };
                 this.inventory = {
-                    stars: 0,
+                    coins: 0,
                 };
                 this.score = {
                     value: 0,
@@ -697,11 +939,10 @@ var sketchProc = function (processingInstance) {
                 this.enemies = [];
                 this.deadEnemies = [];
                 this.smokes = [];
-                this.bubbles = [];
                 this.fishes = [];
                 this.particles = [];
-                this.starImages = [];
-                this.stars = [];
+                this.coinImages = [];
+                this.coins = [];
                 this.assetImages = [];
                 this.assets = [];
                 this.dead = false;
@@ -862,78 +1103,46 @@ var sketchProc = function (processingInstance) {
                     text(args.text, args.x, args.y);
                 },
                 generateBlock: function (blockColor, strokeColor) {
-                    //gets an image of the blocks used in the game
                     background(0, 0, 0, 0);
 
                     pushMatrix();
                     translate(25, 50);
 
                     pushStyle();
-                    fill(blockColor);
+                    fill(blockColor); // Базовый цвет стены (например, серый)
                     stroke(strokeColor);
                     strokeWeight(3);
 
-                    rect(0, 0, 550, 250, 10);
+                    rect(0, 0, 550, 250, 10); // Основа стены
 
+                    // Добавляем "граффити" (случайные линии и фигуры)
                     noStroke();
-                    fill(0, 10);
-
-                    for (var i = 0; i < 10; i++) {
-                        var w = random(50, 300);
-                        var h = random(50, 200);
-
-                        rect(random(0, 550 - w), random(0, 250 - h), w, h, 10);
+                    fill(
+                        random() < 0.5
+                            ? color(255, 0, 0, 200)
+                            : color(0, 255, 0, 200)
+                    ); // Красное или зелёное граффити
+                    for (var i = 0; i < 3; i++) {
+                        var x = random(50, 500);
+                        var y = random(50, 200);
+                        var w = random(20, 100);
+                        var h = random(20, 50);
+                        rect(x, y, w, h);
                     }
+
+                    // Неоновые линии на блоках
+                    stroke(255, 0, 255, 150); // Magenta
+                    strokeWeight(2);
+                    line(0, random(50, 200), 550, random(50, 200));
+
                     popStyle();
                     popMatrix();
 
                     return get(23, 48, 554, 254);
                 },
-                star: function (x, y, inner, outer, sides) {
-                    //gets an image of the stars used in the game
-                    var rot = 360 / sides;
-                    pushMatrix();
-                    translate(x, y);
-                    rotate(radians(270));
-                    beginShape();
-                    for (var angle = 0; angle < 360; angle += rot / 2) {
-                        vertex(
-                            cos(radians(angle)) *
-                                (angle % rot === 0 ? outer : inner),
-                            sin(radians(angle)) *
-                                (angle % rot === 0 ? outer : inner)
-                        );
-                    }
-                    endShape(CLOSE);
-                    popMatrix();
-                },
                 init: function () {
-                    //add initial bubbles
-                    for (var i = 0; i < 15; i++) {
-                        this.bubbles.push({
-                            x: random(width),
-                            y: random(height),
-                            vx: random(0.3, 1) * (random() < 0.5 ? 1 : -1),
-                            vy: random(-0.7, -0.3),
-                            diameter: random(10, 20),
-                            opacity: random(50, 100),
-                            dir: random() < 0.5 ? 1 : -1,
-                            offset: random(360) | 0,
-                        });
-                    }
-
-                    //add initial fishes
-                    for (var i = 0; i < 10; i++) {
-                        this.fishes.push({
-                            x: random(width),
-                            y: random(height - 50),
-                            diameter: random(20, 30),
-                            vx: random(0.5, 2),
-                            vy: 0,
-                            dir: random() < 0.5 ? 1 : -1,
-                            speed: random(0.5, 2),
-                        });
-                    }
+                    //add initial clouds
+                    for (var i = 0; i < 10; i++) {}
 
                     //generate block images
                     this.themes[0].images.push(
@@ -1021,7 +1230,7 @@ var sketchProc = function (processingInstance) {
                             textFont(app.fonts.title);
 
                             app.outlineText({
-                                text: "GO GO",
+                                text: "FRESHIE GO",
                                 x: width / 2,
                                 y: 50,
                                 textSize: 100,
@@ -1083,209 +1292,353 @@ var sketchProc = function (processingInstance) {
                         },
                         back: function () {
                             var gx = createGraphics(600, 900, P2D);
-
-                            gx.background(0, 0, 0, 0);
+                            gx.background(20, 20, 40); // Тёмный фон для ночного города
 
                             gx.pushStyle();
                             gx.noStroke();
-                            gx.fill(0, 4);
 
-                            for (var i = 0; i < 20; i++) {
-                                var diameter = random(30, 300);
+                            // Силуэты зданий
+                            for (var i = 0; i < 10; i++) {
+                                gx.fill(40, 40, 60, 200); // Тёмно-серые здания
+                                var x = random(0, 600);
+                                var w = random(50, 150);
+                                var h = random(200, 600);
+                                gx.rect(x, 900 - h, w, h);
 
-                                gx.ellipse(
-                                    random(width),
-                                    random(diameter / 2, 900 - diameter / 2),
-                                    diameter,
-                                    diameter
+                                // Неоновые акценты на зданиях
+                                gx.fill(
+                                    random() < 0.5
+                                        ? color(0, 255, 255, 150)
+                                        : color(255, 0, 255, 150)
+                                ); // Циан или magenta
+                                gx.rect(x + w * 0.2, 900 - h, w * 0.6, 10); // Неоновая полоса
+                            }
+
+                            // Неоновые линии в небе (имитация проводов или света)
+                            gx.stroke(0, 255, 255, 100);
+                            gx.strokeWeight(2);
+                            for (var i = 0; i < 5; i++) {
+                                gx.line(
+                                    random(0, 600),
+                                    random(0, 300),
+                                    random(0, 600),
+                                    random(0, 300)
                                 );
                             }
-                            gx.popStyle();
 
+                            gx.popStyle();
                             return gx.get();
                         },
                         plant1: function () {
-                            background(0, 0, 0, 0);
+                            background(0, 0, 0, 0); // Прозрачный фон
 
                             pushStyle();
-                            strokeWeight(8);
-                            stroke(70, 180, 35);
 
+                            // Основание антенны (металлический цилиндр, торчащий из стены)
+                            strokeWeight(2);
+                            stroke(0); // Чёрный контур для контраста
+                            fill(200, 200, 200); // Серебристый цвет
+                            rect(270, 285, 15, 10, 3); // Основание, прикреплённое к "стене"
+
+                            // Стержень антенны (горизонтальный)
+                            strokeWeight(3);
+                            stroke(0);
+                            fill(180, 180, 180); // Чуть темнее серебристого
+                            rect(285, 287, 25, 6); // Горизонтальный стержень
+
+                            // Тарелка антенны (на конце стержня)
+                            noStroke();
+                            fill(220, 220, 220); // Яркий серебристый цвет
                             pushMatrix();
-                            translate(300, 300);
-
-                            var diameter = 25;
-
-                            for (var i = 0; i < 360; i += 30) {
-                                rotate(radians(30));
-                                line(0, 0, diameter, 0);
-                            }
+                            translate(310, 290);
+                            rotate(radians(45)); // Наклон тарелки для эффекта
+                            ellipse(0, 0, 20, 10); // Эллипс для тарелки
                             popMatrix();
+
+                            // Центральный элемент тарелки (маленький круг)
+                            fill(255, 255, 255); // Белый для контраста
+                            ellipse(310, 290, 4, 4);
+
+                            // Неоновый акцент (свечение на тарелке)
+                            noStroke();
+                            fill(255, 0, 0, 120); // Яркое красное свечение
+                            pushMatrix();
+                            translate(310, 290);
+                            rotate(radians(45));
+                            ellipse(0, 0, 25, 15); // Свечение вокруг тарелки
+                            popMatrix();
+
+                            // Блик на тарелке
+                            fill(255, 255, 255, 180); // Полупрозрачный белый блик
+                            pushMatrix();
+                            translate(313, 287);
+                            rotate(radians(45));
+                            ellipse(0, 0, 8, 4); // Маленький блик
+                            popMatrix();
+
+                            // Антенны (три тонкие линии, торчащие из тарелки)
+                            stroke(0);
+                            strokeWeight(1);
+                            line(310, 290, 320, 285); // Первая линия
+                            line(310, 290, 315, 280); // Вторая линия
+                            line(310, 290, 305, 280); // Третья линия
+
                             popStyle();
 
-                            return get(270, 270, 60, 60);
+                            return get(260, 280, 70, 40); // Увеличенный размер изображения
                         },
                         plant2: function () {
-                            background(0, 0, 0, 0);
+                            background(0, 0, 0, 0); // Прозрачный фон
 
                             pushStyle();
-                            strokeWeight(8);
-                            stroke(193, 133, 204);
 
+                            // Основание антенны (металлический цилиндр, торчащий из стены)
+                            strokeWeight(2);
+                            stroke(0); // Чёрный контур для контраста
+                            fill(200, 200, 200); // Серебристый цвет
+                            rect(270, 285, 15, 10, 3); // Основание, прикреплённое к "стене"
+
+                            // Стержень антенны (горизонтальный)
+                            strokeWeight(3);
+                            stroke(0);
+                            fill(180, 180, 180); // Чуть темнее серебристого
+                            rect(285, 287, 30, 6); // Горизонтальный стержень (чуть длиннее, чем у plant1)
+
+                            // Тарелка антенны (на конце стержня)
+                            noStroke();
+                            fill(220, 220, 220); // Яркий серебристый цвет, как на картинке
                             pushMatrix();
-                            translate(300, 300);
-
-                            var diameter = 25;
-
-                            for (var i = 0; i < 360; i += 30) {
-                                rotate(radians(30));
-                                line(0, 0, diameter, 0);
-                            }
+                            translate(315, 290);
+                            rotate(radians(45)); // Наклон тарелки для эффекта
+                            ellipse(0, 0, 25, 15); // Эллипс для тарелки (чуть больше, чем у plant1)
                             popMatrix();
+
+                            // Центральный элемент тарелки (маленький круг)
+                            fill(255, 255, 255); // Белый для контраста
+                            ellipse(315, 290, 5, 5);
+
+                            // Неоновый акцент (свечение на тарелке)
+                            noStroke();
+                            fill(0, 255, 255, 120); // Яркое циановое свечение, как на картинке
+                            pushMatrix();
+                            translate(315, 290);
+                            rotate(radians(45));
+                            ellipse(0, 0, 30, 20); // Свечение вокруг тарелки
+                            popMatrix();
+
+                            // Блик на тарелке
+                            fill(255, 255, 255, 180); // Полупрозрачный белый блик
+                            pushMatrix();
+                            translate(318, 287);
+                            rotate(radians(45));
+                            ellipse(0, 0, 10, 5); // Маленький блик
+                            popMatrix();
+
+                            // Антенны (три тонкие линии, торчащие из тарелки, как на картинке)
+                            stroke(0);
+                            strokeWeight(1);
+                            line(315, 290, 325, 285); // Первая линия
+                            line(315, 290, 320, 280); // Вторая линия
+                            line(315, 290, 310, 280); // Третья линия
+
+                            // Маленький шарик на конце центральной антенны (как на картинке)
+                            noStroke();
+                            fill(255, 255, 255); // Белый шарик
+                            ellipse(320, 280, 4, 4);
+
                             popStyle();
 
-                            return get(270, 270, 60, 60);
+                            return get(260, 280, 70, 40); // Размер изображения (такой же, как у plant1)
                         },
                         plant3: function () {
-                            background(0, 0, 0, 0);
+                            background(0, 0, 0, 0); // Прозрачный фон
 
                             pushStyle();
-                            strokeWeight(8);
-                            stroke(70, 180, 35);
 
-                            pushMatrix();
-                            translate(300, 300);
+                            // Основание вывески (металлический держатель)
+                            strokeWeight(2);
+                            stroke(0); // Чёрный контур
+                            fill(150, 150, 150); // Серый цвет
+                            rect(270, 285, 15, 10, 3); // Основание, прикреплённое к "стене"
 
-                            var diameter = 30;
+                            // Стержень (горизонтальный)
+                            strokeWeight(3);
+                            stroke(0);
+                            fill(120, 120, 120); // Тёмно-серый
+                            rect(285, 287, 25, 6); // Горизонтальный стержень
 
-                            for (var i = 0; i < 360; i += 180) {
-                                rotate(radians(180));
-                                line(0, 0, diameter, 0);
-                                line(
-                                    diameter * 0.3,
-                                    -diameter * 0.4,
-                                    diameter * 1.2,
-                                    -diameter * 0.4
-                                );
-                                line(
-                                    diameter * 0.4,
-                                    diameter * 0.4,
-                                    diameter * 0.8,
-                                    diameter * 0.4
-                                );
-                                line(
-                                    diameter * 0.3,
-                                    -diameter * 0.4,
-                                    diameter * 0.3,
-                                    0
-                                );
-                                line(
-                                    diameter * 0.4,
-                                    diameter * 0.4,
-                                    diameter * 0.4,
-                                    0
-                                );
-                            }
-                            popMatrix();
+                            // Вывеска (прямоугольник, удлинённый)
+                            strokeWeight(2);
+                            stroke(0); // Чёрный контур
+                            fill(50, 50, 50); // Тёмный фон вывески
+                            rect(310, 280, 50, 15, 2); // Увеличенная длина с 40 до 50
+
+                            // Неоновый текст
+                            noStroke();
+                            fill(255, 255, 0, 200); // Яркий жёлтый текст
+                            textAlign(CENTER, CENTER);
+                            textSize(10);
+                            text("RUN", 335, 287); // Смещённый центр текста (было 330)
+
+                            // Неоновое свечение вокруг текста
+                            noStroke();
+                            fill(255, 255, 0, sin(frameCount * 0.1) * 50 + 50); // Мерцающее жёлтое свечение
+                            rect(310, 280, 50, 15, 2); // Свечение вокруг вывески (тоже удлинённое)
+
                             popStyle();
 
-                            return get(260, 280, 80, 40);
+                            return get(260, 280, 90, 40); // Увеличенный размер изображения (с 80 до 90 по ширине)
                         },
                         plant4: function () {
+                            background(0, 0, 0, 0); // Прозрачный фон
+
+                            pushStyle();
+
+                            // Основание вывески (металлический держатель)
+                            strokeWeight(2);
+                            stroke(0); // Чёрный контур
+                            fill(150, 150, 150); // Серый цвет
+                            rect(270, 285, 15, 10, 3); // Основание, прикреплённое к "стене"
+
+                            // Стержень (горизонтальный)
+                            strokeWeight(3);
+                            stroke(0);
+                            fill(120, 120, 120); // Тёмно-серый
+                            rect(285, 287, 25, 6); // Горизонтальный стержень
+
+                            // Вывеска (прямоугольник, удлинённый)
+                            strokeWeight(2);
+                            stroke(0); // Чёрный контур
+                            fill(50, 50, 50); // Тёмный фон вывески
+                            rect(310, 280, 50, 15, 2); // Увеличенная длина с 40 до 50
+
+                            // Неоновый текст
+                            noStroke();
+                            fill(0, 255, 0, 200); // Яркий зелёный текст
+                            textAlign(CENTER, CENTER);
+                            textSize(12); // Чуть больше, чем у plant3
+                            text("GO", 335, 287); // Смещённый центр текста (было 325)
+
+                            // Неоновое свечение вокруг текста
+                            noStroke();
+                            fill(0, 255, 0, sin(frameCount * 0.1) * 50 + 50); // Мерцающее зелёное свечение
+                            rect(310, 280, 50, 15, 2); // Свечение вокруг вывески (тоже удлинённое)
+
+                            popStyle();
+
+                            return get(260, 280, 90, 40); // Увеличенный размер изображения (с 70 до 90 по ширине)
+                        },
+                        coin1: function () {
                             background(0, 0, 0, 0);
 
                             pushStyle();
-                            strokeWeight(8);
-                            stroke(193, 133, 204);
+                            // Основа монетки
+                            fill(255, 215, 0); // Золотой цвет
+                            stroke(255, 235, 100); // Светло-золотой контур
+                            strokeWeight(6);
+                            ellipse(300, 300, 100, 100); // Круглая монетка
 
+                            // Блик для объёма
+                            fill(255, 255, 200, 150); // Полупрозрачный белый блик
+                            noStroke();
+                            arc(300, 300, 80, 80, radians(-45), radians(135)); // Блик в форме дуги
+
+                            // Знак звезды в центре
+                            fill(255, 235, 100);
                             pushMatrix();
                             translate(300, 300);
+                            rotate(radians(270));
+                            beginShape();
+                            for (var angle = 0; angle < 360; angle += 72) {
+                                // 5 лучей (360 / 5 = 72)
+                                vertex(
+                                    cos(radians(angle)) * 30,
+                                    sin(radians(angle)) * 30
+                                ); // Внешний радиус
+                                vertex(
+                                    cos(radians(angle + 36)) * 20,
+                                    sin(radians(angle + 36)) * 20
+                                ); // Внутренний радиус
+                            }
+                            endShape(CLOSE);
+                            popMatrix();
 
-                            var diameter = 30;
+                            popStyle();
 
-                            for (var i = 0; i < 360; i += 180) {
-                                rotate(radians(180));
-                                line(0, 0, diameter, 0);
-                                line(
-                                    diameter * 0.3,
-                                    -diameter * 0.4,
-                                    diameter * 1.2,
-                                    -diameter * 0.4
+                            return get(200, 190, 200, 200);
+                        },
+                        coin2: function () {
+                            background(0, 0, 0, 0);
+
+                            pushStyle();
+                            // Основа монетки
+                            fill(255, 215, 0); // Золотой цвет
+                            stroke(255, 235, 100); // Светло-золотой контур
+                            strokeWeight(6);
+                            ellipse(300, 300, 100, 100); // Круглая монетка
+
+                            // Блик для объёма
+                            fill(255, 255, 200, 150); // Полупрозрачный белый блик
+                            noStroke();
+                            arc(300, 300, 80, 80, radians(-45), radians(135)); // Блик в форме дуги
+
+                            // Знак звезды в центре
+                            fill(255, 245, 150);
+                            pushMatrix();
+                            translate(300, 300);
+                            rotate(radians(270));
+                            beginShape();
+                            for (var angle = 0; angle < 360; angle += 72) {
+                                vertex(
+                                    cos(radians(angle)) * 30,
+                                    sin(radians(angle)) * 30
                                 );
-                                line(
-                                    diameter * 0.4,
-                                    diameter * 0.4,
-                                    diameter * 0.8,
-                                    diameter * 0.4
-                                );
-                                line(
-                                    diameter * 0.3,
-                                    -diameter * 0.4,
-                                    diameter * 0.3,
-                                    0
-                                );
-                                line(
-                                    diameter * 0.4,
-                                    diameter * 0.4,
-                                    diameter * 0.4,
-                                    0
+                                vertex(
+                                    cos(radians(angle + 36)) * 20,
+                                    sin(radians(angle + 36)) * 20
                                 );
                             }
+                            endShape(CLOSE);
                             popMatrix();
-                            popStyle();
 
-                            return get(260, 280, 80, 40);
-                        },
-                        star1: function () {
-                            background(0, 0, 0, 0);
-
-                            pushStyle();
-                            stroke(255, 200);
-                            strokeWeight(6);
-                            fill(237, 150, 107);
-
-                            app.star(300, 300, 55, 100, 5);
-
-                            strokeWeight(8);
-                            stroke(50, 200);
-                            line(280, 270, 280, 285);
-                            line(320, 270, 320, 285);
                             popStyle();
 
                             return get(200, 190, 200, 200);
                         },
-                        star2: function () {
+                        coin3: function () {
                             background(0, 0, 0, 0);
 
                             pushStyle();
-                            stroke(255, 200);
+                            // Основа монетки
+                            fill(255, 215, 0); // Золотой цвет
+                            stroke(255, 235, 100); // Светло-золотой контур
                             strokeWeight(6);
-                            fill(240, 115, 209);
+                            ellipse(300, 300, 100, 100); // Круглая монетка
 
-                            app.star(300, 300, 55, 100, 5);
+                            // Блик для объёма
+                            fill(255, 255, 200, 150); // Полупрозрачный белый блик
+                            noStroke();
+                            arc(300, 300, 80, 80, radians(-45), radians(135)); // Блик в форме дуги
 
-                            strokeWeight(8);
-                            stroke(50, 200);
-                            line(280, 270, 280, 285);
-                            line(320, 270, 320, 285);
-                            popStyle();
+                            // Знак звезды в центре
+                            fill(255, 255, 200);
+                            pushMatrix();
+                            translate(300, 300);
+                            rotate(radians(270));
+                            beginShape();
+                            for (var angle = 0; angle < 360; angle += 72) {
+                                vertex(
+                                    cos(radians(angle)) * 30,
+                                    sin(radians(angle)) * 30
+                                );
+                                vertex(
+                                    cos(radians(angle + 36)) * 20,
+                                    sin(radians(angle + 36)) * 20
+                                );
+                            }
+                            endShape(CLOSE);
+                            popMatrix();
 
-                            return get(200, 190, 200, 200);
-                        },
-                        star3: function () {
-                            background(0, 0, 0, 0);
-
-                            pushStyle();
-                            stroke(255, 200);
-                            strokeWeight(6);
-                            fill(83, 189, 224);
-
-                            app.star(300, 300, 55, 100, 5);
-
-                            strokeWeight(8);
-                            stroke(50, 200);
-                            line(280, 270, 280, 285);
-                            line(320, 270, 320, 285);
                             popStyle();
 
                             return get(200, 190, 200, 200);
@@ -1329,10 +1682,10 @@ var sketchProc = function (processingInstance) {
                         this.assetImages.push(this.images.plant3);
                         this.assetImages.push(this.images.plant4);
 
-                        //add star images
-                        this.starImages.push(this.images.star1);
-                        this.starImages.push(this.images.star2);
-                        this.starImages.push(this.images.star3);
+                        //add coin images
+                        this.coinImages.push(this.images.coin1);
+                        this.coinImages.push(this.images.coin2);
+                        this.coinImages.push(this.images.coin3);
 
                         //set the initial blocks
                         this.setBlocks();
@@ -1341,16 +1694,10 @@ var sketchProc = function (processingInstance) {
                         this.scene = s;
                     }
                 },
-                resetBubbles: function () {
-                    //resets the bubbles ready for a new game
-                    for (var i = 0; i < this.bubbles.length; i++) {
-                        this.bubbles[i].x = random(width);
-                        this.bubbles[i].y = random(height);
-                    }
-                },
+
                 reset: function () {
                     //resets all game parameters before each game
-                    this.stars.length = 0;
+                    this.coins.length = 0;
                     this.spikes.length = 0;
                     this.lazers.length = 0;
                     this.enemies.length = 0;
@@ -1373,7 +1720,6 @@ var sketchProc = function (processingInstance) {
                     this.shake = 0;
                     this.theme = random(this.themes.length) | 0;
                     this.colors = this.themes[this.theme];
-                    this.resetBubbles();
                     this.scoreSaved = false;
                     this.setBlocks();
                 },
@@ -1530,7 +1876,6 @@ var sketchProc = function (processingInstance) {
                     this.score.best = max(this.score.best, this.score.value);
                 },
                 addSmoke: function () {
-                    //add smoke when hit the lava
                     for (var i = 0; i < 30; i++) {
                         this.smokes.push({
                             x: random(
@@ -1541,34 +1886,31 @@ var sketchProc = function (processingInstance) {
                                 this.player.y,
                                 this.player.y + this.player.h
                             ),
-                            vx: random(-0.5, 0.5),
-                            vy: random(-1, -0.5),
-                            color: random(50, 80),
-                            diameter: 15,
+                            vx: random(-1, 1),
+                            vy: random(-2, -0.5),
+                            color: color(0, 191, 255, 150), // Голубые брызги
+                            diameter: 10,
                             opacity: random(180, 230) | 0,
                         });
                     }
                 },
                 runSmoke: function () {
-                    //display and move the smoke
                     noStroke();
                     for (var i = this.smokes.length - 1; i >= 0; i--) {
                         var smoke = this.smokes[i];
 
                         fill(smoke.color, smoke.opacity);
-                        rect(
+                        ellipse(
                             smoke.x,
                             smoke.y,
                             smoke.diameter,
-                            smoke.diameter,
-                            2
-                        );
+                            smoke.diameter
+                        ); // Круглые брызги
 
                         smoke.x += smoke.vx;
                         smoke.y += smoke.vy;
                         smoke.opacity = constrain(smoke.opacity - 2, 0, 255);
 
-                        //if the opacity is zero then remove the smoke
                         if (smoke.opacity === 0) {
                             this.smokes.splice(i, 1);
                         }
@@ -1591,123 +1933,15 @@ var sketchProc = function (processingInstance) {
                         });
                     }
                 },
-                runBubbles: function () {
-                    //display and move the bubbles
-                    noStroke();
-
-                    for (var i = this.bubbles.length - 1; i >= 0; i--) {
-                        var bubble = this.bubbles[i];
-
-                        fill(255, bubble.opacity);
-                        ellipse(
-                            bubble.x,
-                            bubble.y,
-                            bubble.diameter,
-                            bubble.diameter
-                        );
-
-                        bubble.x +=
-                            sin(radians(frameCount + bubble.offset)) *
-                            bubble.vx;
-                        bubble.y += bubble.vy;
-
-                        //reuse the bubbles
-                        if (bubble.dir === 1) {
-                            bubble.opacity = constrain(
-                                bubble.opacity - 0.5,
-                                0,
-                                150
-                            );
-                            if (bubble.opacity === 0) {
-                                bubble.dir *= -1;
-                            }
-                        } else {
-                            bubble.opacity = constrain(
-                                bubble.opacity + 0.5,
-                                0,
-                                150
-                            );
-                            if (bubble.opacity === 150) {
-                                bubble.dir *= -1;
-                            }
-                        }
-
-                        if (
-                            bubble.y - bubble.diameter >
-                            this.player.ymin + 400
-                        ) {
-                            bubble.y -= 800;
-                        } else if (
-                            bubble.y + bubble.diameter <
-                            this.player.ymin - 400
-                        ) {
-                            bubble.y += 800;
-                        }
-                    }
-                },
-                runFishes: function () {
-                    //display and move the fishes
-                    noStroke();
-                    fill(50, 50);
-
-                    for (var i = 0; i < this.fishes.length; i++) {
-                        var fish = this.fishes[i];
-
-                        pushMatrix();
-                        translate(
-                            fish.x,
-                            fish.y + sin(radians(frameCount * fish.speed)) * 20
-                        );
-                        rotate(radians(fish.dir === 1 ? 0 : 180));
-                        ellipse(0, 0, fish.diameter, fish.diameter * 0.7);
-                        triangle(
-                            -fish.diameter * 0.4,
-                            0,
-                            -fish.diameter * 0.7,
-                            -fish.diameter * 0.3,
-                            -fish.diameter * 0.7,
-                            fish.diameter * 0.3
-                        );
-                        popMatrix();
-
-                        fish.x += fish.vx * fish.dir;
-
-                        //if fish go off the screen then reset them
-                        if (
-                            (fish.dir === 1 &&
-                                fish.x - fish.diameter > width) ||
-                            (fish.dir === -1 && fish.x + fish.diameter < 0)
-                        ) {
-                            var dir = random() < 0.5 ? 1 : -1;
-
-                            if (dir === 1) {
-                                fish.x = -fish.diameter;
-                            } else {
-                                fish.x = width + fish.diameter;
-                            }
-                            fish.y = random(height - 50) - this.player.ymin;
-                        } else if (
-                            fish.y - fish.diameter >
-                            this.player.ymin + 400
-                        ) {
-                            fish.y -= 800;
-                        } else if (
-                            fish.y + fish.diameter <
-                            this.player.ymin - 400
-                        ) {
-                            fish.y += 800;
-                        }
-                    }
-                },
                 checkCollisions: function () {
-                    //check collisions with the stars
-                    for (var i = this.stars.length - 1; i >= 0; i--) {
-                        var star = this.stars[i];
+                    //check collisions with the coins
+                    for (var i = this.coins.length - 1; i >= 0; i--) {
+                        var coin = this.coins[i];
 
-                        if (this.rectCircleCollision(this.player, star)) {
-                            this.inventory.stars++;
+                        if (this.rectCircleCollision(this.player, coin)) {
+                            this.inventory.coins++; // Обновляем инвентарь для монет
                             this.score.value += 5;
-                            this.stars.splice(i, 1);
+                            this.coins.splice(i, 1);
 
                             if (this.sound) {
                                 this.sounds.star.pause();
@@ -1959,11 +2193,13 @@ var sketchProc = function (processingInstance) {
                                             random(1, 2) *
                                             (random() < 0.5 ? 1 : -1),
                                         gravity: 0.4,
-                                        color: color(219, 118, 247),
+                                        color: color(50, 50, 50), // Тёмный корпус дрона
+                                        neonColor: color(0, 255, 255), // Неоновый свет (циан)
                                     });
                                 } else if (selection < 0.8) {
                                     //lazer
                                     lazerAdded = true;
+                                    var isStreetLamp = random() < 0.5;
                                     this.lazers.push({
                                         x: b1.x + b1.w - 10,
                                         y: b1.y + b1.h / 2 - 5,
@@ -2019,12 +2255,12 @@ var sketchProc = function (processingInstance) {
                                     });
                                 }
 
-                                //add some stars
+                                //add some coins
                                 if (!lazerAdded && random() < 0.75) {
-                                    var numberOfStars = random(4) | 0;
+                                    var numberOfCoins = random(4) | 0;
 
-                                    for (var j = 0; j < numberOfStars; j++) {
-                                        this.stars.push({
+                                    for (var j = 0; j < numberOfCoins; j++) {
+                                        this.coins.push({
                                             x:
                                                 spikeSide === "right"
                                                     ? b1.x + b1.w + 18
@@ -2032,12 +2268,12 @@ var sketchProc = function (processingInstance) {
                                             y:
                                                 b1.y +
                                                 b1.h / 2 -
-                                                (numberOfStars - 1) * 20 +
+                                                (numberOfCoins - 1) * 20 +
                                                 j * 40,
-                                            diameter: 30,
-                                            color: color(242, 215, 63),
-                                            image: this.starImages[
-                                                random(this.starImages.length) |
+                                            diameter: 50,
+                                            color: color(255, 215, 0), // Золотой цвет монетки
+                                            image: this.coinImages[
+                                                random(this.coinImages.length) |
                                                     0
                                             ],
                                         });
@@ -2143,30 +2379,30 @@ var sketchProc = function (processingInstance) {
                     }
                     popStyle();
                 },
-                drawStars: function () {
-                    //draw the stars
+                drawCoins: function () {
+                    //draw the coins
                     pushStyle();
                     imageMode(CENTER);
 
-                    for (var i = this.stars.length - 1; i >= 0; i--) {
-                        var star = this.stars[i];
+                    for (var i = this.coins.length - 1; i >= 0; i--) {
+                        var coin = this.coins[i];
 
                         pushMatrix();
-                        translate(star.x, star.y);
-                        rotate(radians(frameCount));
+                        translate(coin.x, coin.y);
+                        rotate(radians(frameCount * 2)); // Вращение монетки
 
                         image(
-                            star.image,
+                            coin.image,
                             0,
                             0,
-                            star.diameter * 1.5,
-                            star.diameter * 1.5
+                            coin.diameter * 1.5,
+                            coin.diameter * 1.5
                         );
                         popMatrix();
 
-                        //remove the star if it goes off the screen
-                        if (star.y - star.diameter > this.player.ymin + 400) {
-                            this.stars.splice(i, 1);
+                        //remove the coin if it goes off the screen
+                        if (coin.y - coin.diameter > this.player.ymin + 400) {
+                            this.coins.splice(i, 1);
                         }
                     }
 
@@ -2217,149 +2453,175 @@ var sketchProc = function (processingInstance) {
                     }
                 },
                 drawEnemies: function () {
-                    //draw the enemies (birds)
                     noStroke();
                     for (var i = this.enemies.length - 1; i >= 0; i--) {
                         var enemy = this.enemies[i];
-
                         pushMatrix();
                         translate(enemy.x, enemy.y);
-                        rotate(
-                            radians(
-                                enemy.angle.value +
-                                    sin(radians(frameCount * 10)) * 10
-                            )
+                        rotate(radians(enemy.angle.value));
+
+                        // Основной корпус (сфера)
+                        fill(220, 220, 220); // Белый цвет корпуса
+                        ellipse(0, 0, enemy.diameter, enemy.diameter);
+
+                        // Пропеллеры (4 штуки по углам)
+                        fill(180, 180, 180); // Серый цвет пропеллеров
+                        // Левый верхний
+                        ellipse(
+                            -enemy.diameter * 0.5,
+                            -enemy.diameter * 0.5,
+                            enemy.diameter * 0.3,
+                            enemy.diameter * 0.3
+                        );
+                        // Правый верхний
+                        ellipse(
+                            enemy.diameter * 0.5,
+                            -enemy.diameter * 0.5,
+                            enemy.diameter * 0.3,
+                            enemy.diameter * 0.3
+                        );
+                        // Левый нижний
+                        ellipse(
+                            -enemy.diameter * 0.5,
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.3,
+                            enemy.diameter * 0.3
+                        );
+                        // Правый нижний
+                        ellipse(
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.3,
+                            enemy.diameter * 0.3
                         );
 
-                        //beak
-                        fill(247, 208, 67);
-                        triangle(
-                            enemy.diameter * 0.7,
-                            0,
-                            enemy.diameter * 0.4,
-                            -enemy.diameter * 0.15,
-                            enemy.diameter * 0.4,
+                        // Голубые акценты на пропеллерах
+                        fill(0, 191, 255); // Голубой цвет
+                        ellipse(
+                            -enemy.diameter * 0.5,
+                            -enemy.diameter * 0.5,
+                            enemy.diameter * 0.15,
                             enemy.diameter * 0.15
                         );
-                        //body
-                        fill(enemy.color);
-                        ellipse(0, 0, enemy.diameter, enemy.diameter);
-                        noStroke();
-                        fill(79, 79, 79);
-                        arc(
-                            0,
-                            0,
-                            enemy.diameter,
-                            enemy.diameter,
-                            0,
-                            radians(180)
+                        ellipse(
+                            enemy.diameter * 0.5,
+                            -enemy.diameter * 0.5,
+                            enemy.diameter * 0.15,
+                            enemy.diameter * 0.15
                         );
-                        noFill();
-                        stroke(255, 200);
-                        strokeWeight(1);
-                        ellipse(0, 0, enemy.diameter, enemy.diameter);
-                        //fin
-                        fill(247, 54, 74);
-                        triangle(
-                            -enemy.diameter / 2,
-                            0,
-                            -enemy.diameter * 0.7,
-                            -enemy.diameter * 0.2,
-                            -enemy.diameter * 0.7,
-                            enemy.diameter * 0.2
+                        ellipse(
+                            -enemy.diameter * 0.5,
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.15,
+                            enemy.diameter * 0.15
                         );
-                        //eyes
-                        fill(50, 150);
+                        ellipse(
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.15,
+                            enemy.diameter * 0.15
+                        );
+
+                        // Глаз спереди
+                        fill(0, 191, 255, 150); // Полупрозрачный голубой для стеклянного эффекта
+                        ellipse(
+                            enemy.diameter * 0.2,
+                            0,
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.5
+                        );
+                        fill(255, 255, 255, 200); // Белый блик
                         ellipse(
                             enemy.diameter * 0.3,
-                            -enemy.diameter * 0.15,
+                            -enemy.diameter * 0.1,
                             enemy.diameter * 0.15,
                             enemy.diameter * 0.15
                         );
-                        fill(250, 100);
-                        ellipse(
-                            enemy.diameter * 0.3,
-                            enemy.diameter * 0.15,
-                            enemy.diameter * 0.15,
-                            enemy.diameter * 0.15
-                        );
+
                         popMatrix();
-
-                        //remove the enemy (bird) if it goes off the screen
                         if (enemy.y - enemy.diameter > this.player.ymin + 400) {
                             this.enemies.splice(i, 1);
                         }
                     }
                 },
                 drawDeadEnemies: function () {
-                    //draw the enemies (birds) when you destroy them
                     for (var i = this.deadEnemies.length - 1; i >= 0; i--) {
                         var enemy = this.deadEnemies[i];
-
                         enemy.vy += enemy.gravity;
                         enemy.y += enemy.vy;
-
                         enemy.angle.value += 10;
-
                         pushMatrix();
                         translate(enemy.x, enemy.y);
-                        rotate(
-                            radians(
-                                enemy.angle.value +
-                                    sin(radians(frameCount * 10)) * 10
-                            )
-                        );
+                        rotate(radians(enemy.angle.value));
 
-                        //beak
-                        fill(247, 208, 67);
-                        triangle(
-                            enemy.diameter * 0.7,
-                            0,
-                            enemy.diameter * 0.4,
-                            -enemy.diameter * 0.15,
-                            enemy.diameter * 0.4,
-                            enemy.diameter * 0.15
-                        );
-                        //body
-                        fill(enemy.color);
+                        // Основной корпус (сфера, тусклее для мёртвого дрона)
+                        fill(150, 150, 150); // Тусклый серый цвет
                         ellipse(0, 0, enemy.diameter, enemy.diameter);
-                        fill(79, 79, 79);
-                        arc(
-                            0,
-                            0,
-                            enemy.diameter,
-                            enemy.diameter,
-                            0,
-                            radians(180)
-                        );
-                        //fin
-                        fill(247, 54, 74);
-                        triangle(
-                            -enemy.diameter / 2,
-                            0,
-                            -enemy.diameter * 0.7,
-                            -enemy.diameter * 0.2,
-                            -enemy.diameter * 0.7,
-                            enemy.diameter * 0.2
-                        );
-                        //eyes
-                        fill(50, 150);
-                        ellipse(
-                            enemy.diameter * 0.3,
-                            -enemy.diameter * 0.15,
-                            enemy.diameter * 0.15,
-                            enemy.diameter * 0.15
-                        );
-                        fill(250, 100);
-                        ellipse(
-                            enemy.diameter * 0.3,
-                            enemy.diameter * 0.15,
-                            enemy.diameter * 0.15,
-                            enemy.diameter * 0.15
-                        );
-                        popMatrix();
 
-                        //remove the enemy (bird) if it goes off the screen
+                        // Пропеллеры (4 штуки по углам)
+                        fill(120, 120, 120); // Более тёмный серый для мёртвого состояния
+                        ellipse(
+                            -enemy.diameter * 0.5,
+                            -enemy.diameter * 0.5,
+                            enemy.diameter * 0.3,
+                            enemy.diameter * 0.3
+                        );
+                        ellipse(
+                            enemy.diameter * 0.5,
+                            -enemy.diameter * 0.5,
+                            enemy.diameter * 0.3,
+                            enemy.diameter * 0.3
+                        );
+                        ellipse(
+                            -enemy.diameter * 0.5,
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.3,
+                            enemy.diameter * 0.3
+                        );
+                        ellipse(
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.3,
+                            enemy.diameter * 0.3
+                        );
+
+                        // Голубые акценты на пропеллерах (тусклее)
+                        fill(0, 150, 200, 100); // Тусклый голубой
+                        ellipse(
+                            -enemy.diameter * 0.5,
+                            -enemy.diameter * 0.5,
+                            enemy.diameter * 0.15,
+                            enemy.diameter * 0.15
+                        );
+                        ellipse(
+                            enemy.diameter * 0.5,
+                            -enemy.diameter * 0.5,
+                            enemy.diameter * 0.15,
+                            enemy.diameter * 0.15
+                        );
+                        ellipse(
+                            -enemy.diameter * 0.5,
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.15,
+                            enemy.diameter * 0.15
+                        );
+                        ellipse(
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.15,
+                            enemy.diameter * 0.15
+                        );
+
+                        // Глаз спереди (тусклый, без блика)
+                        fill(0, 150, 200, 100); // Тусклый голубой
+                        ellipse(
+                            enemy.diameter * 0.2,
+                            0,
+                            enemy.diameter * 0.5,
+                            enemy.diameter * 0.5
+                        );
+
+                        popMatrix();
                         if (enemy.y - enemy.diameter > this.player.ymin + 400) {
                             this.deadEnemies.splice(i, 1);
                         }
@@ -2394,23 +2656,22 @@ var sketchProc = function (processingInstance) {
 
                         if (!this.scoreSaved) {
                             console.log("Saving score:", this.score.value);
-                            saveScoreToLeaderboard(this.score.value);
+                            onGameEnd(this.score.value);
                             this.scoreSaved = true;
                         }
                     }
                 },
                 drawLava: function () {
-                    //draw the lava at bottom of the screen
                     pushStyle();
                     stroke(
                         lerpColor(
-                            color(242, 145, 97),
-                            color(232, 108, 46),
+                            color(0, 150, 255),
+                            color(0, 100, 200),
                             map(sin(radians(frameCount * 4)), -1, 1, 1, 0)
                         )
                     );
                     strokeWeight(15);
-                    fill(242, 229, 111);
+                    fill(0, 191, 255, 150); // Полупрозрачная голубая вода
                     beginShape();
                     vertex(this.lava.x1, this.lava.y1);
                     bezierVertex(
@@ -2427,16 +2688,16 @@ var sketchProc = function (processingInstance) {
                     strokeWeight(1);
                     popStyle();
 
-                    //add particles coming out of the lava
+                    // Частицы воды (пузырьки)
                     if (frameCount % 2 === 0) {
                         this.lava.arr.push({
                             x: random(width),
                             y: height + 30,
                             vx: random(-1, 1),
                             vy: random(-1, -0.5),
-                            diameter: random(10, 20),
+                            diameter: random(5, 15),
                             opacity: random(200, 255) | 0,
-                            color: color(237, 205, 87),
+                            color: color(255, 255, 255, 150), // Белые пузырьки
                             timer: 0,
                             duration: random(60, 120),
                         });
@@ -2454,8 +2715,8 @@ var sketchProc = function (processingInstance) {
                             particle.diameter
                         );
                         particle.color = lerpColor(
-                            color(237, 205, 87),
-                            color(232, 108, 46),
+                            color(255, 255, 255, 150),
+                            color(0, 191, 255, 150),
                             map(particle.timer, 0, 120, 0, 1)
                         );
                         particle.x += particle.vx;
@@ -2554,7 +2815,6 @@ var sketchProc = function (processingInstance) {
                     image(this.images.back, 0, this.parallax.back.y1);
                     image(this.images.back, 0, this.parallax.back.y2);
 
-                    this.runFishes();
                     this.drawAssets();
                     this.drawBlocks();
                     popMatrix();
@@ -2566,7 +2826,6 @@ var sketchProc = function (processingInstance) {
                     image(this.images.heading, -width / 2, -90);
                     popMatrix();
 
-                    this.runBubbles();
                     this.drawLava();
 
                     for (var k in this.buttons.menu) {
@@ -2598,7 +2857,6 @@ var sketchProc = function (processingInstance) {
                     image(this.images.back, 0, this.parallax.back.y1);
                     image(this.images.back, 0, this.parallax.back.y2);
 
-                    this.runFishes();
                     this.drawAssets();
                     this.drawSpikes();
                     this.drawLazers();
@@ -2606,10 +2864,9 @@ var sketchProc = function (processingInstance) {
                     this.moveEnemies();
                     this.drawDeadEnemies();
                     this.drawBlocks();
-                    this.drawStars();
+                    this.drawCoins();
                     this.drawParticles();
                     this.drawDeadPlayer();
-                    this.runBubbles();
                     popMatrix();
 
                     this.drawLava();
@@ -2691,7 +2948,6 @@ var sketchProc = function (processingInstance) {
                     image(this.images.back, 0, this.parallax.back.y1);
                     image(this.images.back, 0, this.parallax.back.y2);
 
-                    this.runFishes();
                     this.drawAssets();
                     this.drawSpikes();
                     this.drawLazers();
@@ -2699,11 +2955,10 @@ var sketchProc = function (processingInstance) {
                     this.moveEnemies();
                     this.drawDeadEnemies();
                     this.drawBlocks();
-                    this.drawStars();
+                    this.drawCoins();
                     this.drawParticles();
                     this.player.draw();
                     this.movePlayer();
-                    this.runBubbles();
                     popMatrix();
 
                     //if game has started then check for collisions

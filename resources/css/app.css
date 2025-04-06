@@ -95,3 +95,35 @@
         transition: opacity 1.5s ease-out;
     }
 }
+.mobile-scrollbar {
+    /* Для Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(128, 128, 128, 0.5) transparent;
+}
+
+/* Для Chrome, Edge, Safari */
+.mobile-scrollbar::-webkit-scrollbar {
+    width: 4px; /* Тонкий скроллбар, как на мобильных */
+}
+
+.mobile-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* Прозрачный фон трека */
+    border-radius: 8px;
+}
+
+.mobile-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(128, 128, 128, 0); /* Изначально прозрачный */
+    border-radius: 8px; /* Закругленные углы */
+    transition: background 0.3s ease;
+}
+
+/* Показываем скроллбар при наведении или скролле */
+.mobile-scrollbar:hover::-webkit-scrollbar-thumb,
+.mobile-scrollbar:active::-webkit-scrollbar-thumb {
+    background: rgba(128, 128, 128, 0.5); /* Полупрозрачный серый */
+}
+
+/* При активном взаимодействии (например, при скролле) */
+.mobile-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(128, 128, 128, 0.7); /* Чуть темнее при наведении */
+}

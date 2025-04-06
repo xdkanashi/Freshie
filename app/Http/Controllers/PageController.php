@@ -10,11 +10,6 @@ class PageController extends Controller
         return view('welcome');
     }
 
-    public function collections()
-    {
-        return view('collections');
-    }
-
     public function contact()
     {
         return view('contact');
@@ -58,11 +53,6 @@ class PageController extends Controller
     public function games()
     {
         return view('games.games');
-    }
-
-    public function gogogame()
-    {
-        return view('games.gogo-game');
     }
 
     public function blockstackgame()

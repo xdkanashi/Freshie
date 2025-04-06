@@ -99,10 +99,15 @@
                         Get an instant estimate by entering your destination below.
                     </p>
                     <div id="shipping-calculator" class="space-y-6">
-                        <div class="shipping-control shipping-cube shipping-input">
+                        <div class="shipping-control shipping-cube shipping-input relative">
                             <input type="text"
                                 class="w-full bg-transparent border-0 px-3 mt-2 py-3 text-white text-base placeholder-white focus:outline-none"
-                                placeholder="Country / Region *" id="shipping-country" maxlength="30" required>
+                                placeholder="Country / Region *" id="shipping-country" maxlength="30" required
+                                autocomplete="off">
+                            <div id="country-dropdown"
+                                class="absolute top-full left-0 w-full bg-black border border-white rounded mt-1 hidden z-10 max-h-60 overflow-y-auto">
+                                <!-- Список стран будет добавляться через JS -->
+                            </div>
                             <div class="shipping-bg-top">
                                 <div class="shipping-bg-inner"></div>
                             </div>
@@ -750,14 +755,6 @@
             });
         });
 
-        // Shipping Calculator Placeholder
-        document.getElementById('calculate-shipping').addEventListener('click', () => {
-            const country = document.getElementById('shipping-country').value;
-            const result = document.getElementById('shipping-result');
-            result.classList.remove('hidden');
-            result.textContent = country ? `Estimated Cost for ${country}: $12.99 (example)` : 'Please enter a country.';
-        });
-
         // Delivery Cards Cursor-Following Glow Effect
         const deliveryCardsContainer = document.querySelector(".delivery-cards");
         const deliveryCardsContainerInner = document.querySelector(".delivery-cards__inner");
@@ -853,6 +850,80 @@
 
             gridItems.forEach(item => {
                 itemObserver.observe(item);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const shippingCountryInput = document.getElementById('shipping-country');
+            const countryDropdown = document.getElementById('country-dropdown');
+            const calculateButton = document.getElementById('calculate-shipping');
+            const shippingResult = document.getElementById('shipping-result');
+
+            // Список регионов (расширенный до регионов и подрегионов)
+            const countries = [
+                // Основные регионы
+                'Africa', 'Asia', 'Australia', 'Europe', 'North America', 'South America',
+                // Африка
+                'Central Africa', 'East Africa', 'North Africa', 'Southern Africa', 'West Africa',
+                // Азия
+                'Central Asia', 'East Asia', 'South Asia', 'Southeast Asia', 'West Asia',
+                // Австралия и Океания
+                'Australia and New Zealand', 'Melanesia', 'Micronesia', 'Polynesia',
+                // Европа
+                'Central Europe', 'Eastern Europe', 'Northern Europe', 'Southern Europe', 'Western Europe',
+                // Северная Америка
+                'Caribbean', 'Central America', 'Northern America',
+                // Южная Америка
+                'Andean South America', 'Southern Cone', 'Tropical South America'
+            ];
+
+            // Функция для отображения списка стран
+            function updateDropdown(filter = '') {
+                countryDropdown.innerHTML = '';
+                const filteredCountries = countries.filter(country =>
+                    country.toLowerCase().startsWith(filter.toLowerCase())
+                );
+
+                if (filteredCountries.length > 0 && filter) {
+                    filteredCountries.forEach(country => {
+                        const div = document.createElement('div');
+                        div.className = 'px-3 py-2 text-white text-base hover:bg-gray-800 cursor-pointer';
+                        div.textContent = country;
+                        div.addEventListener('click', () => {
+                            shippingCountryInput.value = country;
+                            countryDropdown.classList.add('hidden');
+                        });
+                        countryDropdown.appendChild(div);
+                    });
+                    countryDropdown.classList.remove('hidden');
+                } else {
+                    countryDropdown.classList.add('hidden');
+                }
+            }
+
+            // Обработка ввода в поле
+            shippingCountryInput.addEventListener('input', function () {
+                const value = this.value.trim();
+                updateDropdown(value);
+            });
+
+            // Скрытие выпадающего списка при клике вне
+            document.addEventListener('click', function (e) {
+                if (!shippingCountryInput.contains(e.target) && !countryDropdown.contains(e.target)) {
+                    countryDropdown.classList.add('hidden');
+                }
+            });
+
+            // Обработка клика по кнопке "Calculate"
+            calculateButton.addEventListener('click', function () {
+                const selectedCountry = shippingCountryInput.value.trim();
+                if (selectedCountry && countries.includes(selectedCountry)) {
+                    shippingResult.textContent = `Estimated Cost: ${selectedCountry} is 12.99€`;
+                    shippingResult.classList.remove('hidden');
+                } else {
+                    shippingResult.textContent = 'Please select a valid country/region.';
+                    shippingResult.classList.remove('hidden');
+                }
             });
         });
     </script>
