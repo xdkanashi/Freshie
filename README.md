@@ -1,4 +1,4 @@
-<p align="center"><a href="https://freshlook.duckdns.org" target="_blank"><img src="public/img/logo-removebg.png" width="400" alt="Freshie Logo"></a></p>
+<p align="center"><a href="https://freshlook.duckdns.org" target="_blank"><img src="public/img/logo-removebg.png" width="200" alt="Freshie Logo"></a></p>
 
 # 👕 Freshie — Modern Online Clothing Store
 
