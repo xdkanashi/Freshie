@@ -55,6 +55,7 @@ Or clone it and run locally:
 
 ```bash
 git clone https://github.com/xdkanashi/Freshie.git
+```
 
 🤝 **Contribute**
 We love pull requests!
@@ -64,4 +65,3 @@ Fork the repo, create a branch, and send us your magic ✨
 MIT — feel free to use, modify & share!
 
 Made with 🧠 by xdkanashi
-```
