@@ -87,8 +87,7 @@
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div class="relative">
-                    <img src="{{ asset('//premiumdemo.site/cdn/shop/files/93wi6o.gif?v=1726678774&width=1946') }}"
-                        alt="Limited Edition Item"
+                    <img src="{{ asset('img/limited_drop.JPG') }}" alt="Limited Edition Item"
                         class="w-full h-[460px] object-cover rounded-sm animate-fade-in group-hover:opacity-80 transition-opacity duration-300 glow-effect">
                 </div>
                 <div class="flex flex-col justify-center">
@@ -113,21 +112,19 @@
             </h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 <div class="group">
-                    <img src="{{ asset('//premiumdemo.site/cdn/shop/files/ZIPHOODIEFRONT.png?v=1726769463') }}"
-                        alt="Drop 001 Item 1"
+                    <img src="{{ asset('/img/hoodie.JPG') }}" alt="Drop 001 Item 1"
                         class="w-full h-[300px] object-cover mb-4 group-hover:opacity-80 transition-opacity duration-300 glow-effect">
-                    <p class="text-sm sm:text-base uppercase tracking-wider text-gray-300">Chaos Hoodie</p>
+                    <p class="text-sm sm:text-base uppercase tracking-wider text-gray-300"> Hoodie</p>
                 </div>
                 <div class="group">
-                    <img src="{{ asset('//premiumdemo.site/cdn/shop/files/PREMIUM_10.png') }}" alt=" Drop 001 Item 2"
+                    <img src="{{ asset('/img/longsleeve.JPG') }}" alt=" Drop 001 Item 2"
                         class="w-full h-[300px] object-cover mb-4 group-hover:opacity-80 transition-opacity duration-300 glow-effect">
-                    <p class="text-sm sm:text-base uppercase tracking-wider text-gray-300">T Bandana</p>
+                    <p class="text-sm sm:text-base uppercase tracking-wider text-gray-300">Longsleeve</p>
                 </div>
                 <div class="group">
-                    <img src="{{ asset('//premiumdemo.site/cdn/shop/files/FRONTFLAREDSWEATPANTS.png') }}"
-                        alt="Drop 001 Item 3"
+                    <img src="{{ asset('/img/zip-hoodie.JPG') }}" alt="Drop 001 Item 3"
                         class="w-full h-[300px] object-cover mb-4 group-hover:opacity-80 transition-opacity duration-30 glow-effect">
-                    <p class="text-sm sm:text-base uppercase tracking-wider text-gray-300">Night Pants</p>
+                    <p class="text-sm sm:text-base uppercase tracking-wider text-gray-300">Zip Hoodie</p>
                 </div>
             </div>
             <a href="{{ url('/collections') }}"
@@ -145,19 +142,20 @@
             </h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 <div class="group">
-                    <img src="{{ asset('img/merch-1.jpg') }}" alt="Community Member 1"
+                    <img src="{{ asset('img/merchh-1.jpg') }}" alt="Community Member 1"
                         class="w-full h-[300px] object-cover mb-4 group-hover:opacity-80 transition-opacity duration-300">
-                    <p class="text-sm sm:text-base uppercase tracking-wider text-gray-300">Gleb in Chaos T-shirt</p>
+                    <p class="text-sm sm:text-base uppercase tracking-wider text-gray-300">Dominik and Arina in Zip Hoodie
+                    </p>
                 </div>
                 <div class="group">
-                    <img src="{{ asset('img/merch-2.jpg') }}" alt="Community Member 2"
+                    <img src="{{ asset('img/merchh-2.jpg') }}" alt="Community Member 2"
                         class="w-full h-[300px] object-cover mb-4 group-hover:opacity-80 transition-opacity duration-300">
-                    <p class="text-sm sm:text-base uppercase tracking-wider text-gray-300">Nikita in Rebel T-shirt</p>
+                    <p class="text-sm sm:text-base uppercase tracking-wider text-gray-300">Gleb and Dominik in Hoodie</p>
                 </div>
                 <div class="group">
-                    <img src="{{ asset('img/merch-3.jpg') }}" alt="Community Member 3"
+                    <img src="{{ asset('img/merchh-3.jpg') }}" alt="Community Member 3"
                         class="w-full h-[300px] object-cover mb-4 group-hover:opacity-80 transition-opacity duration-300">
-                    <p class="text-sm sm:text-base uppercase tracking-wider text-gray-300">Vita in Night T-shirt</p>
+                    <p class="text-sm sm:text-base uppercase tracking-wider text-gray-300">Gleb and Arina in Longsleeve</p>
                 </div>
             </div>
             <p class="text-base sm:text-lg uppercase tracking-wider text-gray-300 mt-8">
